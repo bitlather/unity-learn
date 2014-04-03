@@ -81,9 +81,10 @@ public class PlayerHealth : MonoBehaviour {
 - Create a C# script named EnemyHealth, paste in everything we've already done, but change class name to EnemyHealth. Make it appear below the player health box by editing `OnGui()` and associate it with the enemy cube.
 
 
-Enemy AI 1/2
-============
+Enemy AI 1/2, 2/2
+=================
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/003-unity3d-tutorial-enemy-ai-12
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/004-unity3d-tutorial-enemy-ai-22
 
 - Use `Debug.DrawLine()` to draw a line between two objects in the wireframe viewer
 - Use tags in Unity's UI to quickly look up important objects
@@ -112,12 +113,28 @@ public class EnemyAI : MonoBehaviour {
 		// Select player in Unity's UI and see the "tag" attribute. Set it to "Player".
 		GameObject go = GameObject.FindGameObjectWithTag("Player");
 		target = go.transform;
+		rotationSpeed = 5;
+		moveSpeed = 3;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		Debug.DrawLine (target.position, myTransform.position, Color.yellow);
+
+		// Look at target. 
+		// Quaternion slerp turns slowly.
+		// Time.deltaTime makes sure all systems, no matter how many frames per second possible, will turn at same human time.
+		myTransform.rotation = Quaternion.Slerp (
+			myTransform.rotation, 
+			Quaternion.LookRotation(target.position - myTransform.position),
+			rotationSpeed * Time.deltaTime);
+
+		// Move towards target
+		myTransform.position += myTransform.forward * moveSpeed * Time.deltaTime;
 	}
 }
 ```
+
+- `Quaternion.Slerp()` turns something slowly.
+- `Time.deltaTime` ensures that objects move and rotate at the same real-time, regardless of how fast a computer is and how many frames per second occur.
 
