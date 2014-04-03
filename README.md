@@ -1,10 +1,9 @@
 Health Bar 1/2
 ==============
-
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/001-unity3d-tutorial-health-bar-12
 
 - When creating project be sure to create a 3d project
-- Click `2d` button to toggle perspective between 2d and 3d
+- Click `2d` button in *Scene View* to toggle perspective between 2d and 3d
 - Hold `Alt` and `click-drag` to rotate in 3d mode
 - Click object. Press `F` (shift is important) to center screen on it.
 - Add new C# script:
@@ -35,11 +34,11 @@ public class PlayerHealth : MonoBehaviour {
 
 - Click first person perspective object and drag script onto their inspector.
 - Press play. You will see health bar.
+- Public variables can be editted during play.
 
 
 Health Bar 2/2
 ==============
-
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/002-unity3d-tutorial-health-bar-22
 
 - Make health bar script handle division by zero and do less calculation on every frame
@@ -80,3 +79,9 @@ public class PlayerHealth : MonoBehaviour {
 ```
 
 - Create a C# script named EnemyHealth, paste in everything we've already done, but change class name to EnemyHealth. Make it appear below the player health box by editing `OnGui()` and associate it with the enemy cube.
+
+
+Enemy AI 1/2
+============
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/003-unity3d-tutorial-enemy-ai-12
+
