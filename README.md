@@ -85,3 +85,39 @@ Enemy AI 1/2
 ============
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/003-unity3d-tutorial-enemy-ai-12
 
+- Use `Debug.DrawLine()` to draw a line between two objects in the wireframe viewer
+- Use tags in Unity's UI to quickly look up important objects
+- You can create tags in Unity's UI and then assign them to whatever object you want
+- Create this script and drag it onto enemy cube object:
+
+```
+using UnityEngine;
+using System.Collections;
+
+public class EnemyAI : MonoBehaviour {
+	public Transform target;
+	public int moveSpeed;
+	public int rotationSpeed;
+
+	private Transform myTransform;
+
+	void Awake(){ // This is called before everything else
+		// Cache transform so it's much faster.
+		// "transform" is the transform of the object.
+		myTransform = transform;
+	}
+
+	// Use this for initialization
+	void Start () {
+		// Select player in Unity's UI and see the "tag" attribute. Set it to "Player".
+		GameObject go = GameObject.FindGameObjectWithTag("Player");
+		target = go.transform;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		Debug.DrawLine (target.position, myTransform.position, Color.yellow);
+	}
+}
+```
+
