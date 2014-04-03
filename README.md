@@ -78,3 +78,5 @@ public class PlayerHealth : MonoBehaviour {
 	}
 }
 ```
+
+- Create a C# script named EnemyHealth, paste in everything we've already done, but change class name to EnemyHealth. Make it appear below the player health box by editing `OnGui()` and associate it with the enemy cube.
