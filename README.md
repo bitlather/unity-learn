@@ -1,11 +1,13 @@
-h1. 1 : Health Bar 1/2
+Health Bar 1/2
+==============
 
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/001-unity3d-tutorial-health-bar-12
 
-- Click `2d` to toggle perspective between 2d and 3d
+- When creating project be sure to create a 3d project
+- Click `2d` button to toggle perspective between 2d and 3d
 - Hold `Alt` and `click-drag` to rotate in 3d mode
-- Click object. Press `F` to center screen on it.
-- Add new script:
+- Click object. Press `F` (shift is important) to center screen on it.
+- Add new C# script:
 
 ```
 using UnityEngine;
@@ -36,7 +38,8 @@ public class NewBehaviourScript : MonoBehaviour {
 
 
 
-h1. 1 : Health Bar 2/2
+Health Bar 2/2
+==============
 
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/002-unity3d-tutorial-health-bar-22
 
