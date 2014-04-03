@@ -13,7 +13,7 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/001-unity3d-tutoria
 using UnityEngine;
 using System.Collections;
 
-public class NewBehaviourScript : MonoBehaviour {
+public class PlayerHealth : MonoBehaviour {
 	public int MaxHealth = 100;
 	public int CurrentHealth = 100;
 
