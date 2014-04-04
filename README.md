@@ -138,3 +138,9 @@ public class EnemyAI : MonoBehaviour {
 - `Quaternion.Slerp()` turns something slowly.
 - `Time.deltaTime` ensures that objects move and rotate at the same real-time, regardless of how fast a computer is and how many frames per second occur.
 
+
+Melee Combat 1/3
+================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/005-unity3d-tutorial-melee-combat-13
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/006-unity3d-tutorial-melee-combat-23
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/006-unity3d-tutorial-melee-combat-33
