@@ -90,6 +90,7 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/004-unity3d-tutoria
 - Use `Debug.DrawLine()` to draw a line between two objects in the wireframe viewer
 - Use tags in Unity's UI to quickly look up important objects
 - You can create tags in Unity's UI and then assign them to whatever object you want
+- `transform` is the position, rotation, etc of the object the script is attached to. It is magically available for your use, but should be cached to speed things up.
 - Create this script and drag it onto enemy cube object:
 
 ```
@@ -145,3 +146,82 @@ Melee Combat 1/3
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/005-unity3d-tutorial-melee-combat-13
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/006-unity3d-tutorial-melee-combat-23
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/006-unity3d-tutorial-melee-combat-33
+
+We will build a system for player to be able to melee strike the enemy when the enemy is close and in front of the player. Additionally, there is a cool down associated with an attack, so that player cannot simply attack as fast as they can hit a key.
+
+We will also make the enemy melee attack the hero and improve enemy's movements so that the enemy doesn't move into the exact same pixel as the player. (Collision is still possible with player movements).
+
+- Create a C# script named PlayerAttack:
+
+```
+using UnityEngine;
+using System.Collections;
+
+public class PlayerAttack : MonoBehaviour {
+	public GameObject target; 
+	public float attackTimer;
+	public float attackCoolDown;
+
+	// Use this for initialization
+	void Start () {
+		attackTimer = 0;
+		attackCoolDown = 2.0f; // 2 seconds
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (attackTimer > 0) {
+			attackTimer -= Time.deltaTime;
+		}
+		if (attackTimer < 0) {
+			attackTimer = 0;
+		}
+		if (Input.GetKeyUp (KeyCode.F)) {
+			if(attackTimer == 0){
+				Attack();
+				// After successful swing, set cool down so you can't hit 
+				// as fast as you can press the attack key
+				attackTimer = attackCoolDown;
+			}
+		}	
+	}
+
+	private void Attack(){
+		float distance = Vector3.Distance (target.transform.position, transform.position);
+
+		// Now play the game, turn off evil cube's movements, 
+		// and find a good distance where melee is acceptable
+		// Open Window > Console to see output.
+		Debug.Log ("Distance: " + distance); 
+
+		// We've decided a distance of 2.5 or less is good for melee attack
+		if (distance > 2.5F) { // Put F at end of decimal FLOAT value
+			return;
+		}
+
+		// Make sure we're facing the evil cube
+		// -- Take the direction he's in and I'm in, and create vector and make it 1 unit long
+		Vector3 dir = (target.transform.position - transform.position).normalized;
+		// -- Dot product. transform.forward is 1 unit forward.
+		float direction = Vector3.Dot (dir, transform.forward);
+		// -- Check the direction --- -1 if enemy is behind, 1 if ahead, and 0 if on left or right
+		Debug.Log ("Direction: " + direction);
+
+		// Enemy is behind us so quit
+		if (direction <= 0) {
+			return;
+		}
+
+
+
+		EnemyHealth eh = (EnemyHealth)target.GetComponent ("EnemyHealth");
+		eh.AdjustCurrentHealth (-10);
+	}
+}
+```
+
+- In Unity UI, drop this script on the player object. In the script parameters, click and drag Evil Cube into the target.
+- Go to [ Window > Console ] to view `Debug.Log()`
+- `Vector.Dot()` takes the dot product, which gives a value between [-1,1]
+- `Input.GetKeyUp(KeyCode.F)` to determine if `f` or `F` was pressed and released. If do `GetKeyDown()` then user can just hold in the key to fire.
+- Float literals should be suffixed with f: `2.5f`
