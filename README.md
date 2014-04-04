@@ -68,7 +68,8 @@ public class PlayerHealth : MonoBehaviour {
 		GUI.Box(new Rect(10,10,HealthBarLength,20), CurrentHealth + " / " + MaxHealth);
 	}
 	
-	void AdjustCurrentHealth(int amount){ // positive to heal, negative to damage
+	// In later tutorial, other scripts will adjust health, so we need to make this public
+	public void AdjustCurrentHealth(int amount){ // positive to heal, negative to damage
 		CurrentHealth += amount;
 		if(CurrentHealth < 0){ CurrentHealth = 0; }
 		if(CurrentHealth > MaxHealth){ CurrentHealth = MaxHealth; }
