@@ -277,6 +277,8 @@ public class EnemyAttack : MonoBehaviour {
 }
 ```
 
+- Drag EnemyAttack script onto EvilCube and, in the target parameter, drag and drop Player so the cube will target player.
+
 - We also need to update EnemyAI so that EvilCube will stop approaching the player when the player is in striking distance:
 
 
