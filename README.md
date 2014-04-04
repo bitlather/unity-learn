@@ -141,8 +141,8 @@ public class EnemyAI : MonoBehaviour {
 - `Time.deltaTime` ensures that objects move and rotate at the same real-time, regardless of how fast a computer is and how many frames per second occur.
 
 
-Melee Combat 1/3
-================
+Melee Combat 1/3, 2/3, 3/3
+==========================
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/005-unity3d-tutorial-melee-combat-13
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/006-unity3d-tutorial-melee-combat-23
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/006-unity3d-tutorial-melee-combat-33
@@ -211,8 +211,6 @@ public class PlayerAttack : MonoBehaviour {
 		if (direction <= 0) {
 			return;
 		}
-
-
 
 		EnemyHealth eh = (EnemyHealth)target.GetComponent ("EnemyHealth");
 		eh.AdjustCurrentHealth (-10);
