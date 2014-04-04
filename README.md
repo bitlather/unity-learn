@@ -17,14 +17,10 @@ public class PlayerHealth : MonoBehaviour {
 	public int CurrentHealth = 100;
 
 	// Use this for initialization
-	void Start () {
-	
-	}
+	void Start () {	}
 	
 	// Update is called once per frame
-	void Update () {
-	
-	}
+	void Update () { }
 
 	void OnGUI(){
 		GUI.Box(new Rect(10,10,Screen.width / 2 / (MaxHealth / CurrentHealth), 20), CurrentHealth + " / " + MaxHealth);
@@ -223,3 +219,112 @@ public class PlayerAttack : MonoBehaviour {
 - `Vector.Dot()` takes the dot product, which gives a value between [-1,1]
 - `Input.GetKeyUp(KeyCode.F)` to determine if `f` or `F` was pressed and released. If do `GetKeyDown()` then user can just hold in the key to fire.
 - Float literals should be suffixed with f: `2.5f`
+- Create another C# script, EnemyAttack, which is based mostly on PlayerAttack except it attacks based on timer - not key press - and also attacks PlayerHealth:
+
+```
+using UnityEngine;
+using System.Collections;
+
+public class EnemyAttack : MonoBehaviour {
+	public GameObject target; 
+	public float attackTimer;
+	public float attackCoolDown;
+	
+	// Use this for initialization
+	void Start () {
+		attackTimer = 0;
+		attackCoolDown = 2.0f; // 2 seconds
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (attackTimer > 0) {
+			attackTimer -= Time.deltaTime;
+		}
+		if (attackTimer < 0) {
+			attackTimer = 0;
+		}
+		if(attackTimer == 0){ // <-- NO KEY PRESS JUST TIME!
+			Attack();
+			// After successful swing, set cool down so you can't hit 
+			// as fast as you can press the attack key
+			attackTimer = attackCoolDown;
+		}	
+	}
+	
+	private void Attack(){
+		float distance = Vector3.Distance (target.transform.position, transform.position);
+
+		// We've decided a distance of 2.5 or less is good for melee attack
+		if (distance > 2.5F) { // Put F at end of decimal FLOAT value
+			return;
+		}
+		
+		// Make sure we're facing the evil cube
+		// -- Take the direction he's in and I'm in, and create vector and make it 1 unit long
+		Vector3 dir = (target.transform.position - transform.position).normalized;
+		// -- Dot product. transform.forward is 1 unit forward.
+		float direction = Vector3.Dot (dir, transform.forward);
+
+		// Enemy is behind us so quit
+		if (direction <= 0) {
+			return;
+		}
+
+		PlayerHealth eh = (PlayerHealth)target.GetComponent ("PlayerHealth");
+		eh.AdjustCurrentHealth (-10);
+	}
+}
+```
+
+- We also need to update EnemyAI so that EvilCube will stop approaching the player when the player is in striking distance:
+
+
+```
+using UnityEngine;
+using System.Collections;
+
+public class EnemyAI : MonoBehaviour {
+	public Transform target;
+	public int moveSpeed;
+	public int rotationSpeed;
+	public int maxDistance; // If enemy is closer than this, then he will stop moving towards player.
+
+	private Transform myTransform;
+
+	void Awake(){ // This is called before everything else
+		// Cache transform so it's much faster.
+		// "transform" is the transform of the object.
+		myTransform = transform;
+	}
+
+	// Use this for initialization
+	void Start () {
+		// Select player in Unity's UI and see the "tag" attribute. Set it to "Player".
+		GameObject go = GameObject.FindGameObjectWithTag("Player");
+		target = go.transform;
+		rotationSpeed = 5;
+		moveSpeed = 3;
+
+		maxDistance = 2;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		Debug.DrawLine (target.position, myTransform.position, Color.yellow);
+
+		// Look at target. 
+		// Quaternion slerp turns slowly.
+		// Time.deltaTime makes sure all systems, no matter how many frames per second possible, will turn at same human time.
+		myTransform.rotation = Quaternion.Slerp (
+			myTransform.rotation, 
+			Quaternion.LookRotation(target.position - myTransform.position),
+			rotationSpeed * Time.deltaTime);
+
+		if (Vector3.Distance (target.position, myTransform.position) > maxDistance) {
+			// Move towards target
+			myTransform.position += myTransform.forward * moveSpeed * Time.deltaTime;
+		}
+	}
+}
+```
