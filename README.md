@@ -426,13 +426,17 @@ public class Targetting : MonoBehaviour {
 - To get all game objects by tag: `GameObject[] go = GameObject.FindGameObjectsWithTag ("Enemy");`
 
 
-Character Statistics 1/7
-========================
+Character Statistics 1/7 - 7/7
+==============================
 http://www.burgzergarcade.com/tutorials/game-design/011-unity3d-tutorial-character-statistics-17
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/012-unity3d-tutorial-character-statistics-27
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/013-unity3d-tutorial-character-statistics-37
-
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/014-unity3d-tutorial-character-statisics-47
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/015-unity3d-tutorial-character-statisics-57
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/016-unity3d-tutorial-character-statisics-67
 
 - Create a folder in scripts called _Character Classes_
 - Create C# script _Character Classes/BaseStat:_
-- - Create C# script _Character Classes/Attribute:_
+- Create C# script _Character Classes/Attribute:_
+- Create C# script _Character Classes/ModifiedStat:_
+- - Create C# script _Character Classes/Vital:_
