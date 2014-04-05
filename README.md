@@ -1040,3 +1040,14 @@ public class BaseCharacter : MonoBehaviour {
 	}
 }
 ```
+
+
+GUI Style & GUI Skin
+====================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/026-unity3d-tutorial-guistyle-guiskin
+
+- Create a .png that is 128x32 pixels
+- Right click _Hierarchy > Assets_ and click _Import New Asset_ then look for your image
+- Every number in unity should probably be a power of 2. `NPOT` means `Not a power of two`. I think this has to do with images, textures, or something.
+- Expand _Main Camera_, _Character Generator Script_, _My Style_, _Normal._ Click and drag the background image to the background option (@2:45). You can use Unity's GUI to change font color, etc.
+- Edited script _CharacterGenerator_:
