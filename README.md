@@ -1165,8 +1165,9 @@ Player Prefs 1/7 - 7/7
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/027-unity3d-tutorial-playerprefs-1x
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/028-unity3d-tutorial-playerprefs-2x
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/029-unity3d-tutorial-playerprefs-3x
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/030-unity3d-tutorial-playerprefs-4x
 
-This section discusses how to save player data, how to load objects via code, and how to move between scenes.
+This section discusses how to save player data, how to make prefabs (which are super important for generating enemies, etc, via code!!!), how to make game objects persist between scenes, how to load objects via code, and how to move between scenes.
 
 - `PlayerPrefs` is a unity class that saves player preference data to file
 - `DontDestroyOnLoad (this);` --> Don't destroy this object (script)! When change scene to scene, the object survives so data is still accessible!!!
@@ -1206,11 +1207,11 @@ pc.name = "pc"; // Change name of game object in hierarchy pane
 - We can get rid of the warning form using 'new' when instantiated player character in script _CharacterGenerator:_
 
 ```
-// OLD CODE -----
+// OLD CODE (throws warnings!) -----
 _toon = new PlayerCharacter (); // <-- This will create a warning that says cannot use 'new' keyword. Actually, you can... just not a great way of doing it. He says he'll show a different method later.
 _toon.Awake ();
 
-// NEW CODE -----
+// NEW CODE ------------------------
 _toon = pc.GetComponent <PlayerCharacter> ();
 ```
 
