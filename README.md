@@ -774,6 +774,7 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/021-unity3d-tutoria
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/022-unity3d-tutorial-character-creation-25
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/023-unity3d-tutorial-character-creation-35
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/024-unity3d-tutorial-character-creation-45
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/025-unity3d-tutorial-character-creation-55
 
 - Assets with unity icons are scenes
 - Create C# script _Character/PlayerCharacter:_
