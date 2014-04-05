@@ -1051,3 +1051,119 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/026-unity3d-tutoria
 - Every number in unity should probably be a power of 2. `NPOT` means `Not a power of two`. I think this has to do with images, textures, or something.
 - Expand _Main Camera_, _Character Generator Script_, _My Style_, _Normal._ Click and drag the background image to the background option (@2:45). You can use Unity's GUI to change font color, etc.
 - Edited script _CharacterGenerator_:
+
+```
+using UnityEngine;
+using System.Collections;
+using System;               // <-- FOR ENUM!!
+
+public class CharacterGenerator : MonoBehaviour {
+	private PlayerCharacter _toon;
+	private const int STARTING_POINTS = 350;
+	private const int MIN_STARTING_ATTRIBUTE_VALUE = 10;
+	private const int STARTING_VALUE = 50;
+	private int pointsLeft;
+
+	public GUIStyle myStyle;
+	public GUISkin mySkin;
+
+	// Use this for initialization
+	void Start () {
+		_toon = new PlayerCharacter (); // <-- This will create a warning that says cannot use 'new' keyword. Actually, you can... just not a great way of doing it. He says he'll show a different method later.
+		_toon.Awake ();
+
+		pointsLeft = STARTING_POINTS;
+
+		for (int cnt = 0; cnt < Enum.GetValues (typeof(AttributeName)).Length; cnt++) {
+			_toon.GetPrimaryAttribute(cnt).BaseValue = STARTING_VALUE;
+			pointsLeft -= (STARTING_VALUE - MIN_STARTING_ATTRIBUTE_VALUE);
+		}
+		_toon.StatUpdate ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	}
+
+	void OnGUI(){
+		GUI.skin = mySkin;
+		DisplayName ();
+		DisplayPointsLeft ();
+		DisplayAttributes ();
+		DisplayVitals ();
+		DisplaySkills ();
+	}
+
+	private void DisplayName(){
+		GUI.Label(new Rect(10, 10, 50, 25), "Name:");
+		_toon.Name = GUI.TextField (new Rect (65, 10, 100, 25), _toon.Name);
+	}
+
+	private void DisplayAttributes(){
+		for(int cnt = 0; cnt < Enum.GetValues (typeof(AttributeName)).Length; cnt++){
+			int top = 40 + (cnt * 25);
+			GUI.Label (new Rect(10,  // X
+			                    top, // Y
+			                    100, // WIDTH
+			                    25   // HEIGHT
+				), ((AttributeName)cnt).ToString (), 
+			           myStyle  // <-- GUIStyle & GUI.skin --- use the background image!
+			    );
+
+			GUI.Label (new Rect(115, top, 30, 25), _toon.GetPrimaryAttribute(cnt).AdjustedBaseValue.ToString());
+			if(GUI.Button(new Rect(150, top, 25, 25), "-")){
+				if(_toon.GetPrimaryAttribute(cnt).BaseValue > MIN_STARTING_ATTRIBUTE_VALUE){
+					_toon.GetPrimaryAttribute(cnt).BaseValue--;
+					pointsLeft++;
+					_toon.StatUpdate ();
+				}
+			}
+			if(GUI.Button(new Rect(180, // <-- IF BUTTON CLICKED
+			                       top, 
+			                       25, 
+			                       25
+			    ), "+",
+			   		myStyle  // <-- GUIStyle & GUI.skin --- use the background image!
+			   	)){
+				if(pointsLeft > 0){
+					_toon.GetPrimaryAttribute(cnt).BaseValue++;
+					pointsLeft--;
+					_toon.StatUpdate ();
+				}
+			}
+		}
+	}
+
+	private void DisplayVitals(){
+		for(int cnt = 0; cnt < Enum.GetValues (typeof(VitalName)).Length; cnt++){
+			int top = 40 + ((cnt+7) * 25);
+			GUI.Label (new Rect(10, top, 100, 25), ((VitalName)cnt).ToString ());
+			GUI.Label (new Rect(115, top, 30, 25), _toon.GetVital(cnt).AdjustedBaseValue.ToString());
+		}
+	}
+
+	private void DisplaySkills(){
+		for(int cnt = 0; cnt < Enum.GetValues (typeof(SkillName)).Length; cnt++){
+			int top = 40 + (cnt * 25);
+			GUI.Label (new Rect(250, top, 100, 25), ((SkillName)cnt).ToString ());
+			GUI.Label (new Rect(355, top, 100, 25), _toon.GetSkill(cnt).AdjustedBaseValue.ToString());
+		}
+	}
+
+	private void DisplayPointsLeft(){
+		GUI.Label(new Rect(250, 10, 100, 25), "Points Left: "+pointsLeft);
+	}
+}
+```
+
+- `GUIStyle` for styling a single form element
+- `GUISkin` for styling all form elements
+
+
+Player Prefs 1/7 - 7/7
+======================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/027-unity3d-tutorial-playerprefs-1x
+
+
+
+- GUISkins @8:00. Creating and using them. I don't intend to use GUI elements so I did not take notes. Basically, a skin changes the appearance of every single button, text area, etc. Although... may be nice for labels and speech. Something to think about.
