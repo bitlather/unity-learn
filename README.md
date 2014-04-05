@@ -1163,37 +1163,13 @@ public class CharacterGenerator : MonoBehaviour {
 Player Prefs 1/7 - 7/7
 ======================
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/027-unity3d-tutorial-playerprefs-1x
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/028-unity3d-tutorial-playerprefs-2x
 
-- `PlayerPrefs` is a unity class
+- `PlayerPrefs` is a unity class that saves player preference data to file
 - Create C# script _Scripts/GameSettings_:
 
 ```
-using UnityEngine;
-using System.Collections;
-
-public class GameSettings : MonoBehaviour {
-
-	void Awake(){
-		DontDestroyOnLoad (this);
-	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-	public void SaveCharacterData(){
-		//PlayerPrefs.SetString ("Player Name", 
-	}
-
-	public void LoadCharacterData(){
-	}
-}
+TODO TODO TODO 
 ```
 
 - `DontDestroyOnLoad (this);` --> Don't destroy this object (script)! When change scene to scene, the object survives so data is still accessible!!!
@@ -1206,110 +1182,43 @@ public class GameSettings : MonoBehaviour {
 - Edit script _CharacterGenerator:_
 
 ```
-using UnityEngine;
-using System.Collections;
-using System;               // <-- FOR ENUM!!
-
-public class CharacterGenerator : MonoBehaviour {
-	private PlayerCharacter _toon;
-	private const int STARTING_POINTS = 350;
-	private const int MIN_STARTING_ATTRIBUTE_VALUE = 10;
-	private const int STARTING_VALUE = 50;
-	private int pointsLeft;
-
-	public GUIStyle myStyle;
-	public GUISkin mySkin;
-	public GameObject playerPrefab; // <--- THE ONLY ADDITION FOR PLAYER PREFS 1/x?
-
-	// Use this for initialization
-	void Start () {
-		_toon = new PlayerCharacter (); // <-- This will create a warning that says cannot use 'new' keyword. Actually, you can... just not a great way of doing it. He says he'll show a different method later.
-		_toon.Awake ();
-
-		pointsLeft = STARTING_POINTS;
-
-		for (int cnt = 0; cnt < Enum.GetValues (typeof(AttributeName)).Length; cnt++) {
-			_toon.GetPrimaryAttribute(cnt).BaseValue = STARTING_VALUE;
-			pointsLeft -= (STARTING_VALUE - MIN_STARTING_ATTRIBUTE_VALUE);
-		}
-		_toon.StatUpdate ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
-
-	void OnGUI(){
-		GUI.skin = mySkin;
-		DisplayName ();
-		DisplayPointsLeft ();
-		DisplayAttributes ();
-		DisplayVitals ();
-		DisplaySkills ();
-	}
-
-	private void DisplayName(){
-		GUI.Label(new Rect(10, 10, 50, 25), "Name:");
-		_toon.Name = GUI.TextField (new Rect (65, 10, 100, 25), _toon.Name);
-	}
-
-	private void DisplayAttributes(){
-		for(int cnt = 0; cnt < Enum.GetValues (typeof(AttributeName)).Length; cnt++){
-			int top = 40 + (cnt * 25);
-			GUI.Label (new Rect(10,  // X
-			                    top, // Y
-			                    100, // WIDTH
-			                    25   // HEIGHT
-				), ((AttributeName)cnt).ToString (), 
-			           myStyle  // <-- GUIStyle & GUI.skin --- use the background image!
-			    );
-
-			GUI.Label (new Rect(115, top, 30, 25), _toon.GetPrimaryAttribute(cnt).AdjustedBaseValue.ToString());
-			if(GUI.Button(new Rect(150, top, 25, 25), "-")){
-				if(_toon.GetPrimaryAttribute(cnt).BaseValue > MIN_STARTING_ATTRIBUTE_VALUE){
-					_toon.GetPrimaryAttribute(cnt).BaseValue--;
-					pointsLeft++;
-					_toon.StatUpdate ();
-				}
-			}
-			if(GUI.Button(new Rect(180, // <-- IF BUTTON CLICKED
-			                       top, 
-			                       25, 
-			                       25
-			    ), "+",
-			   		myStyle  // <-- GUIStyle & GUI.skin --- use the background image!
-			   	)){
-				if(pointsLeft > 0){
-					_toon.GetPrimaryAttribute(cnt).BaseValue++;
-					pointsLeft--;
-					_toon.StatUpdate ();
-				}
-			}
-		}
-	}
-
-	private void DisplayVitals(){
-		for(int cnt = 0; cnt < Enum.GetValues (typeof(VitalName)).Length; cnt++){
-			int top = 40 + ((cnt+7) * 25);
-			GUI.Label (new Rect(10, top, 100, 25), ((VitalName)cnt).ToString ());
-			GUI.Label (new Rect(115, top, 30, 25), _toon.GetVital(cnt).AdjustedBaseValue.ToString());
-		}
-	}
-
-	private void DisplaySkills(){
-		for(int cnt = 0; cnt < Enum.GetValues (typeof(SkillName)).Length; cnt++){
-			int top = 40 + (cnt * 25);
-			GUI.Label (new Rect(250, top, 100, 25), ((SkillName)cnt).ToString ());
-			GUI.Label (new Rect(355, top, 100, 25), _toon.GetSkill(cnt).AdjustedBaseValue.ToString());
-		}
-	}
-
-	private void DisplayPointsLeft(){
-		GUI.Label(new Rect(250, 10, 100, 25), "Points Left: "+pointsLeft);
-	}
-}
+TODO TODO TODO
 ```
 
 - A prefab is a blueprint for creating game objects. You can select the prefab and drop it into scene's hierarchy.
 - Click and drag _Player Character_ game object from the hierarchy onto the new prefab. Notice the _Player Character_ game object in hierarchy now has blue text and the prefab now has a blue cube icon. Delete the _Player Character_ game object from hierarchy.
 - Earlier we added `public GameObject playerPrefab;` to script _CharacterGenerator._ In Unity, click _Main Camera) and look at _Character Generator (Script)._ Click and drag the player prefab onto the player prefab parameter.
+
+- To create an object via code:
+
+```
+Instantiate ( // when function is called, it creates the game object (you will see it in Hierarchy pane)
+	playerPrefab,         // The prefab
+	Vector3.zero,         // (0,0,0)
+	Quaternion.identity); // Direction parent is in
+```
+
+- To create an object via code and modify the object, such as it's name in the hierarchy pane:
+
+```
+GameObject pc = 
+	Instantiate (
+		playerPrefab,         // The prefab
+		Vector3.zero,         // (0,0,0)
+		Quaternion.identity) // Direction parent is in
+			as GameObject; // as can be used for type casting
+
+pc.name = "pc"; // Change name of game object in hierarchy pane
+```
+
+- You can use `as` in C# to typecast
+- We can get rid of the warning form using 'new' when instantiated player character in script _CharacterGenerator:_
+
+```
+// OLD CODE -----
+_toon = new PlayerCharacter (); // <-- This will create a warning that says cannot use 'new' keyword. Actually, you can... just not a great way of doing it. He says he'll show a different method later.
+_toon.Awake ();
+
+// NEW CODE -----
+_toon = pc.GetComponent <PlayerCharacter> ();
+``
