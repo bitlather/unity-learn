@@ -335,6 +335,92 @@ public class EnemyAI : MonoBehaviour {
 Targetting Enemies 1/1, 1/2, 1/3
 ================================
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/008-unity3d-tutorial-targetting-enemies-13
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/009-unity3d-tutorial-targetting-enemies-23
+
+We will create three evil cubes manually and build a targetting system that changes color of selected target.
 
 - Click an object in Hierarchy and press `Ctrl+D` to duplicate it
 - `Double click` on an object in Hierarchy to zoom in on it
+- Disable evil cubes' movement script to make testing easier
+- Create C# script Targetting:
+
+```
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic; // Need this for lists!
+
+public class Targetting : MonoBehaviour {
+	public List<Transform> targets;
+	public Transform selectedTarget;
+	private Transform myTransform;
+
+	// Use this for initialization
+	void Start () {
+		targets = new List<Transform> ();
+		selectedTarget = null;
+		AddAllEnemies ();
+		myTransform = transform; // Cache it!!!
+	}
+
+	// Update is called once per frame
+	void Update () {
+		if (Input.GetKeyDown (KeyCode.Tab)) {
+			TargetEnemy();
+		}
+	}
+
+	public void AddAllEnemies(){
+		GameObject[] go = GameObject.FindGameObjectsWithTag ("Enemy");
+		foreach (GameObject enemy in go) {
+			AddTarget(enemy.transform);
+		}
+	}
+
+	private void SortTargetsByDistance(){
+		targets.Sort (delegate(Transform t1, Transform t2) {
+			return (Vector3.Distance(t1.position, myTransform.position)
+				.CompareTo (Vector3.Distance (t2.position, myTransform.position)));
+		});
+	}
+
+	public void AddTarget(Transform enemy){
+		targets.Add (enemy);
+	}
+
+	private void TargetEnemy(){
+		if (selectedTarget == null) {
+			// If no targets, select closest
+			SortTargetsByDistance ();
+			selectedTarget = targets [0];
+		} else {
+			int index = targets.IndexOf (selectedTarget);
+			if(index < targets.Count - 1){
+				index++;
+			} else {
+				index = 0;
+			}
+			DeselectTarget ();
+			selectedTarget = targets[index];
+		}
+		SelectTarget();
+	}
+
+	public void DeselectTarget(){
+		selectedTarget.renderer.material.color = Color.blue;
+		selectedTarget = null;
+	}
+
+	private void SelectTarget(){
+		selectedTarget.renderer.material.color = Color.red;
+		PlayerAttack pa = (PlayerAttack)GetComponent ("PlayerAttack");
+		pa.target = selectedTarget.gameObject;
+	}
+}
+```
+
+- Add script to player
+- When playing, press tab to cycle through closest enemies. Note that closeness is decided the first time tab is pressed.
+- Change color of object: `selectedTarget.renderer.material.color = Color.red;`
+- Manipulate values in a different script: `PlayerAttack pa = (PlayerAttack)GetComponent ("PlayerAttack"); pa.target = selectedTarget.gameObject;`
+- Above script uses lists and sorting algorithm with delegates
+- To get all game objects by tag: `GameObject[] go = GameObject.FindGameObjectsWithTag ("Enemy");`
