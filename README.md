@@ -1156,8 +1156,8 @@ public class CharacterGenerator : MonoBehaviour {
 }
 ```
 
-- `GUIStyle` for styling a single form element
-- `GUISkin` for styling all form elements
+- `GUIStyle` for styling a single form element.
+- `GUISkin` for styling all form elements. @8:00, Creating and using them. I don't intend to use GUI elements so I did not take notes. Basically, a skin changes the appearance of every single button, text area, etc. Although... may be nice for labels and speech. Something to think about.
 
 
 Player Prefs 1/7 - 7/7
@@ -1166,4 +1166,4 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/027-unity3d-tutoria
 
 
 
-- GUISkins @8:00. Creating and using them. I don't intend to use GUI elements so I did not take notes. Basically, a skin changes the appearance of every single button, text area, etc. Although... may be nice for labels and speech. Something to think about.
+
