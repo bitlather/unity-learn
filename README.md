@@ -516,7 +516,7 @@ public enum AttributeName {
 - Note how enums are created in C#
 
 - Create C# script _Character Classes/ModifiedStat:_
- 
+
 ```
 using System.Collections.Generic;
 
@@ -621,3 +621,8 @@ public enum SkillName {
 
 Base Character Class 1/3 - 3/3
 ==============================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/018-unity3d-tutorial-base-character-class-13
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/019-unity3d-tutorial-base-character-class-23
+
+- Create C# script _CharacterClasses/BaseCharacter:_
+
