@@ -330,3 +330,11 @@ public class EnemyAI : MonoBehaviour {
 	}
 }
 ```
+
+
+Targetting Enemies 1/1, 1/2, 1/3
+================================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/008-unity3d-tutorial-targetting-enemies-13
+
+- Click an object in Hierarchy and press `Ctrl+D` to duplicate it
+- `Double click` on an object in Hierarchy to zoom in on it
