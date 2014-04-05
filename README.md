@@ -1164,14 +1164,11 @@ Player Prefs 1/7 - 7/7
 ======================
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/027-unity3d-tutorial-playerprefs-1x
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/028-unity3d-tutorial-playerprefs-2x
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/029-unity3d-tutorial-playerprefs-3x
+
+This section discusses how to save player data, how to load objects via code, and how to move between scenes.
 
 - `PlayerPrefs` is a unity class that saves player preference data to file
-- Create C# script _Scripts/GameSettings_:
-
-```
-TODO TODO TODO 
-```
-
 - `DontDestroyOnLoad (this);` --> Don't destroy this object (script)! When change scene to scene, the object survives so data is still accessible!!!
 - `PlayerPrefs.SetString(key, value);` saves player's preference data. See manual for where data is saved if interested.
 - Go to _Character Generator_ scene
@@ -1179,12 +1176,6 @@ TODO TODO TODO
 - Drag _GameSettings_ script onto *__GameSettings* game object
 - _Game Object > Create Empty_ and zero everything out on Transform by using reset and name it _Player Character_ and attach _PlayerCharacter_ script to the object
 - Create folder _Prefabs_ and right click folder and select _Create > Prefab_ then rename the prefab to _Player Character Prefab._
-- Edit script _CharacterGenerator:_
-
-```
-TODO TODO TODO
-```
-
 - A prefab is a blueprint for creating game objects. You can select the prefab and drop it into scene's hierarchy.
 - Click and drag _Player Character_ game object from the hierarchy onto the new prefab. Notice the _Player Character_ game object in hierarchy now has blue text and the prefab now has a blue cube icon. Delete the _Player Character_ game object from hierarchy.
 - Earlier we added `public GameObject playerPrefab;` to script _CharacterGenerator._ In Unity, click _Main Camera) and look at _Character Generator (Script)._ Click and drag the player prefab onto the player prefab parameter.
@@ -1221,4 +1212,23 @@ _toon.Awake ();
 
 // NEW CODE -----
 _toon = pc.GetComponent <PlayerCharacter> ();
-``
+```
+
+- Create a level: _File > Build Settings_ then click and drag your scenes into the big "scenes to build" area. The scene you want to load first should be listed first. Close popup. Save project. 
+ 
+
+
+
+
+- Create C# script _Scripts/GameSettings_:
+
+```
+TODO TODO TODO 
+```
+
+- Edit script _CharacterGenerator:_
+
+```
+TODO TODO TODO
+```
+
