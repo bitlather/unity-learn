@@ -727,15 +727,15 @@ public class BaseCharacter : MonoBehaviour {
 
 		// energy
 		ModifyingAttribute energyModifier = new ModifyingAttribute ();
-		health.attribute = GetPrimaryAttribute ((int)AttributeName.Constitution);
-		health.ratio = 1; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
+		energyModifier.attribute = GetPrimaryAttribute ((int)AttributeName.Constitution);
+		energyModifier.ratio = 1; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
 
 		GetVital ((int)VitalName.Energy).AddModifier (energyModifier);
 
 		// mana
 		ModifyingAttribute manaModifier = new ModifyingAttribute ();
-		health.attribute = GetPrimaryAttribute ((int)AttributeName.Willpower);
-		health.ratio = 1; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
+		manaModifier.attribute = GetPrimaryAttribute ((int)AttributeName.Willpower);
+		manaModifier.ratio = 1; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
 		
 		GetVital ((int)VitalName.Mana).AddModifier (manaModifier);
 	}
@@ -783,3 +783,4 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/024-unity3d-tutoria
 - _File > New Scene_ then `Ctrl+S` and save as _Character Generation_. Move it to scenes folder.
 - Double click a scene to make it active scene.
 - Click and drag script _CharacterGenerator_ to _Main Camera_ to add it.
+- Edit script _BaseCharacter_:
