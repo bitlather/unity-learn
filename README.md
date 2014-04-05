@@ -424,3 +424,15 @@ public class Targetting : MonoBehaviour {
 - Manipulate values in a different script: `PlayerAttack pa = (PlayerAttack)GetComponent ("PlayerAttack"); pa.target = selectedTarget.gameObject;`
 - Above script uses lists and sorting algorithm with delegates
 - To get all game objects by tag: `GameObject[] go = GameObject.FindGameObjectsWithTag ("Enemy");`
+
+
+Character Statistics 1/7
+========================
+http://www.burgzergarcade.com/tutorials/game-design/011-unity3d-tutorial-character-statistics-17
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/012-unity3d-tutorial-character-statistics-27
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/013-unity3d-tutorial-character-statistics-37
+
+
+- Create a folder in scripts called _Character Classes_
+- Create C# script _Character Classes/BaseStat:_
+- - Create C# script _Character Classes/Attribute:_
