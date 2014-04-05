@@ -1164,6 +1164,11 @@ Player Prefs 1/7 - 7/7
 ======================
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/027-unity3d-tutorial-playerprefs-1x
 
+- `PlayerPrefs` is a unity class
+- Create C# script _Scripts/GameSettings_:
 
+- Go to _Character Generator_ scene
+- Click _Game Object > Create Empty_ and name it _Game Settings_
+- Drag _GameSettings_ script onto *__GameSettings* game object
 
 
