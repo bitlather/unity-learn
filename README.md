@@ -766,3 +766,18 @@ public class BaseCharacter : MonoBehaviour {
 ```
 
 - Reminder: C# has `uint`
+
+
+Character Creation 1/5 - 5/5
+============================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/021-unity3d-tutorial-character-creation-15
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/022-unity3d-tutorial-character-creation-25
+
+- Assets with unity icons are scenes
+- Create C# script _Character/PlayerCharacter:_
+- Create C# script _Character/CharacterGenerator:_
+- Create folder _/Assets/Scenes_
+- Move old scene into scenes folder
+- _File > New Scene_ then `Ctrl+S` and save as _Character Generation_. Move it to scenes folder.
+- Double click a scene to make it active scene.
+- Click and drag script _CharacterGenerator_ to _Main Camera_ to add it.
