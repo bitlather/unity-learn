@@ -776,12 +776,267 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/023-unity3d-tutoria
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/024-unity3d-tutorial-character-creation-45
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/025-unity3d-tutorial-character-creation-55
 
+_I skipped the fifth tutorial because it was just changing literals to constants. This did not interest me._
+
 - Assets with unity icons are scenes
 - Create C# script _Character/PlayerCharacter:_
+
+```
+public class PlayerCharacter : BaseCharacter {
+
+}
+```
+
 - Create C# script _Character/CharacterGenerator:_
+
+```
+using UnityEngine;
+using System.Collections;
+using System;               // <-- FOR ENUM!!
+
+public class CharacterGenerator : MonoBehaviour {
+	private PlayerCharacter _toon;
+	private const int STARTING_POINTS = 350;
+	private const int MIN_STARTING_ATTRIBUTE_VALUE = 10;
+	private const int STARTING_VALUE = 50;
+	private int pointsLeft;
+
+	// Use this for initialization
+	void Start () {
+		_toon = new PlayerCharacter (); // <-- This will create a warning that says cannot use 'new' keyword. Actually, you can... just not a great way of doing it. He says he will show a different method later.
+		_toon.Awake ();
+
+		pointsLeft = STARTING_POINTS;
+
+		for (int cnt = 0; cnt < Enum.GetValues (typeof(AttributeName)).Length; cnt++) {
+			_toon.GetPrimaryAttribute(cnt).BaseValue = STARTING_VALUE;
+			pointsLeft -= (STARTING_VALUE - MIN_STARTING_ATTRIBUTE_VALUE);
+		}
+		_toon.StatUpdate ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	}
+
+	void OnGUI(){
+		DisplayName ();
+		DisplayPointsLeft ();
+		DisplayAttributes ();
+		DisplayVitals ();
+		DisplaySkills ();
+	}
+
+	private void DisplayName(){
+		GUI.Label(new Rect(10, 10, 50, 25), "Name:");
+		_toon.Name = GUI.TextField (new Rect (65, 10, 100, 25), _toon.Name);
+	}
+
+	private void DisplayAttributes(){
+		for(int cnt = 0; cnt < Enum.GetValues (typeof(AttributeName)).Length; cnt++){
+			int top = 40 + (cnt * 25);
+			GUI.Label (new Rect(10, top, 100, 25), ((AttributeName)cnt).ToString ());
+			GUI.Label (new Rect(115, top, 30, 25), _toon.GetPrimaryAttribute(cnt).AdjustedBaseValue.ToString());
+			if(GUI.Button(new Rect(150, top, 25, 25), "-")){
+				if(_toon.GetPrimaryAttribute(cnt).BaseValue > MIN_STARTING_ATTRIBUTE_VALUE){
+					_toon.GetPrimaryAttribute(cnt).BaseValue--;
+					pointsLeft++;
+					_toon.StatUpdate ();
+				}
+			}
+			if(GUI.Button(new Rect(180, top, 25, 25), "+")){ // <-- IF BUTTON CLICKED
+				if(pointsLeft > 0){
+					_toon.GetPrimaryAttribute(cnt).BaseValue++;
+					pointsLeft--;
+					_toon.StatUpdate ();
+				}
+			}
+		}
+	}
+
+	private void DisplayVitals(){
+		for(int cnt = 0; cnt < Enum.GetValues (typeof(VitalName)).Length; cnt++){
+			int top = 40 + ((cnt+7) * 25);
+			GUI.Label (new Rect(10, top, 100, 25), ((VitalName)cnt).ToString ());
+			GUI.Label (new Rect(115, top, 30, 25), _toon.GetVital(cnt).AdjustedBaseValue.ToString());
+		}
+	}
+
+	private void DisplaySkills(){
+		for(int cnt = 0; cnt < Enum.GetValues (typeof(SkillName)).Length; cnt++){
+			int top = 40 + (cnt * 25);
+			GUI.Label (new Rect(250, top, 100, 25), ((SkillName)cnt).ToString ());
+			GUI.Label (new Rect(355, top, 100, 25), _toon.GetSkill(cnt).AdjustedBaseValue.ToString());
+		}
+	}
+
+	private void DisplayPointsLeft(){
+		GUI.Label(new Rect(250, 10, 100, 25), "Points Left: "+pointsLeft);
+	}
+}
+```
+
+- To draw a label: `GUI.Label(new Rect(10, 10, 50, 25), "Name:");`
+- To accept multiline input: `_toon.Name = GUI.TextArea (new Rect (65, 10, 100, 25), _toon.Name);`
+- To accept single line input: `_toon.Name = GUI.TextField (new Rect (65, 10, 100, 25), _toon.Name);`
+- To create a button and handle click event:
+
+```
+			if(GUI.Button(new Rect(180, top, 25, 25), "+")){ // <-- IF BUTTON CLICKED
+				if(pointsLeft > 0){
+					_toon.GetPrimaryAttribute(cnt).BaseValue++;
+					pointsLeft--;
+					_toon.StatUpdate ();
+				}
+			}
+```
+
+- Author recommends Sprite Manager, but it costs a little money so he doesn't use it in these tutorials
+- Unity documentation shows how to do most things with javascript; from what I read in forums, javascript is hard to debug though.
+
 - Create folder _/Assets/Scenes_
 - Move old scene into scenes folder
 - _File > New Scene_ then `Ctrl+S` and save as _Character Generation_. Move it to scenes folder.
 - Double click a scene to make it active scene.
 - Click and drag script _CharacterGenerator_ to _Main Camera_ to add it.
 - Edit script _BaseCharacter_:
+
+```
+using UnityEngine;
+using System.Collections;
+using System;               // <-- So can quickly access enum class
+
+public class BaseCharacter : MonoBehaviour {
+	private string _name;
+	private int _level;
+	private uint _freeExp;
+
+	private Attribute[] _primaryAttribute;
+	private Vital[] _vital;
+	private Skill[] _skill;
+
+	public void Awake(){
+		_name = string.Empty;
+		_level = 0;
+		_freeExp = 0;
+
+		// Make array the same size as number of items in Enum
+		_primaryAttribute = new Attribute[Enum.GetValues (typeof(AttributeName)).Length];
+		_vital = new Vital[Enum.GetValues (typeof(VitalName)).Length];
+		_skill = new Skill[Enum.GetValues (typeof(SkillName)).Length];
+
+		SetupPrimaryAttributes ();
+		SetupVitals ();
+		SetupSkills ();
+	}
+
+	public string Name{
+		get{ return _name; }
+		set{ _name = value;}
+	}
+
+	public int Level{
+		get{ return _level; }
+		set{ _level = value;}
+	}
+
+	public uint FreeExp{
+		get{ return _freeExp; }
+		set{ _freeExp = value;}
+	}
+
+
+
+	public void AddExp(uint exp){
+		_freeExp += exp;
+		CalculateLevel ();
+	}
+
+	public void CalculateLevel(){
+		//TODO Take the average of all the player's skills and assign that as player level	
+	}
+
+	private void SetupPrimaryAttributes(){
+		for (int cnt = 0; cnt < _primaryAttribute.Length; cnt++) {
+			_primaryAttribute[cnt] = new Attribute();
+		}
+	}
+
+	private void SetupVitals(){
+		for (int cnt = 0; cnt < _vital.Length; cnt++) {
+			_vital[cnt] = new Vital();
+		}
+		SetupVitalModifiers (); // <--- ADDED FOR CHARACTER CREATION 4/5
+	}
+
+	private void SetupSkills(){
+		for (int cnt = 0; cnt < _skill.Length; cnt++) {
+			_skill[cnt] = new Skill();
+		}
+		SetupSkillModifiers (); // <--- ADDED FOR CHARACTER CREATION 4/5
+	}
+
+	public Attribute GetPrimaryAttribute(int index){
+		return _primaryAttribute [index];
+	}
+	public Vital GetVital(int index){
+		return _vital [index];
+	}
+	public Skill GetSkill(int index){
+		return _skill [index];
+	}
+
+	private void SetupVitalModifiers(){
+		// THIS CODE IS PRETTY ROUGH BECAUSE HE SAID UNITY 2.X IS NOT CAPABLE OF THINGS UNITY 3.X IS CAPABLE OF
+		// health --- Add half of our constitution to health
+		ModifyingAttribute health = new ModifyingAttribute ();
+		health.attribute = GetPrimaryAttribute ((int)AttributeName.Constitution);
+		health.ratio = 0.5f; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
+
+		GetVital ((int)VitalName.Health).AddModifier (health);
+		GetVital ((int)VitalName.Health).AddModifier (
+			new ModifyingAttribute{
+				attribute = GetPrimaryAttribute((int)AttributeName.Constitution), 
+				ratio = 0.5f
+			}
+		);
+
+		// energy
+		ModifyingAttribute energyModifier = new ModifyingAttribute ();
+		energyModifier.attribute = GetPrimaryAttribute ((int)AttributeName.Constitution);
+		energyModifier.ratio = 1; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
+
+		GetVital ((int)VitalName.Energy).AddModifier (energyModifier);
+
+		// mana
+		ModifyingAttribute manaModifier = new ModifyingAttribute ();
+		manaModifier.attribute = GetPrimaryAttribute ((int)AttributeName.Willpower);
+		manaModifier.ratio = 1; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
+		
+		GetVital ((int)VitalName.Mana).AddModifier (manaModifier);
+	}
+
+	private void SetupSkillModifiers(){
+		ModifyingAttribute MeleeOffenseModifier1 = new ModifyingAttribute ();
+		ModifyingAttribute MeleeOffenseModifier2 = new ModifyingAttribute ();
+
+		MeleeOffenseModifier1.attribute = GetPrimaryAttribute ((int)AttributeName.Might);
+		MeleeOffenseModifier1.ratio = .33f; // --> Add third of might to melee
+
+		MeleeOffenseModifier2.attribute = GetPrimaryAttribute ((int)AttributeName.Nimbleness);
+		MeleeOffenseModifier2.ratio = .33f; // --> Add third of nimbleness to melee
+
+		GetSkill ((int)SkillName.Melee_Offense).AddModifier (MeleeOffenseModifier1);
+		GetSkill ((int)SkillName.Melee_Offense).AddModifier (MeleeOffenseModifier2);
+	}
+
+	public void StatUpdate(){
+		for (int cnt = 0; cnt < _vital.Length; cnt++) {
+			_vital[cnt].Update ();
+		}
+		for (int cnt = 0; cnt < _skill.Length; cnt++) {
+			_skill[cnt].Update ();
+		}
+	}
+}
+```
