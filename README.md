@@ -434,9 +434,190 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/013-unity3d-tutoria
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/014-unity3d-tutorial-character-statisics-47
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/015-unity3d-tutorial-character-statisics-57
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/016-unity3d-tutorial-character-statisics-67
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/017-unity3d-tutorial-character-statisics-77
+
+I find the inheritance set up in the tutorial confusing and the statistics a bit too simplistic, but I think it's necessary to continue in the tutorials, so code is here.
 
 - Create a folder in scripts called _Character Classes_
 - Create C# script _Character Classes/BaseStat:_
+
+```
+public class BaseStat {
+	private int _baseValue;       // The base value of this stat; goes up 1 on each level up
+	private int _buffValue;       // Amount of the buff to this stat
+	private int _expToLevel;      // Total amount of exp needed to raise this skill
+	private float _levelModifier; // How much experience will be needed for the following level to be achieved
+
+	public BaseStat(){
+		_baseValue = 0;
+		_buffValue = 0;
+		_expToLevel = 100;
+		_levelModifier = 1.1f;
+		// First level takes 100 exp; next level takes (100*1.1 = 110), etc
+	}
+
+	private int CalcuateExpToLevel(){
+		return (int)(_expToLevel * _levelModifier);
+	}
+
+	public void LevelUp(){
+		_expToLevel = CalcuateExpToLevel ();
+		_baseValue++;
+	}
+
+	public int AdjustedBaseValue{
+		get { return _baseValue + _buffValue; }
+	}
+
+#region Basic setters and getters
+	public int BaseValue {
+		get{ return _baseValue; }
+		set{ _baseValue = value; }
+	}
+	public int BuffValue {
+		get{ return _buffValue; }
+		set{ _buffValue = value; }
+	}
+	public int ExpToLevel {
+		get{ return _expToLevel; }
+		set{ _expToLevel = value; }
+	}
+	public float LevelModifier {
+		get{ return _levelModifier; }
+		set{ _levelModifier = value; }
+	}
+#endregion
+}
+```
+
+- Note how getters and setters work in C#
+
 - Create C# script _Character Classes/Attribute:_
+
+```
+public class Attribute : BaseStat{
+	public Attribute(){
+		ExpToLevel = 50;
+		LevelModifier = 1.05f;
+	}
+}
+
+public enum AttributeName {
+	Might,
+	Constitution,
+	Nimbleness,
+	Speed,
+	Concentration,
+	Willpower,
+	Charisma
+}
+```
+
+- Note how enums are created in C#
+
 - Create C# script _Character Classes/ModifiedStat:_
-- - Create C# script _Character Classes/Vital:_
+ 
+```
+using System.Collections.Generic;
+
+public class ModifiedStat : BaseStat{
+	private List<ModifyingAttribute> _mods;   // A list of attributes that modify the stat
+	private int _modValue;                    // Amount added to base value of modifiers
+
+	public ModifiedStat(){
+		_mods = new List<ModifyingAttribute> ();
+		_modValue = 0;
+	}
+
+	public void AddModifier(ModifyingAttribute mod){
+		_mods.Add (mod);
+	}
+
+	private void CalculateModValue(){
+		_modValue = 0;
+		if (_mods.Count > 0) {
+			foreach (ModifyingAttribute att in _mods) {
+				_modValue += (int)(att.attribute.AdjustedBaseValue * att.ratio);
+			}
+		}
+	}
+
+	public new int AdjustedBaseValue{
+		get{ return BaseValue + BuffValue + _modValue; }
+	}
+
+	public void Update(){
+		CalculateModValue ();
+	}
+}
+
+public struct ModifyingAttribute{
+	public Attribute attribute;
+	public float ratio;
+}
+```
+
+- Note how to override a getter/setter in C# using _new_ keyword
+
+- Create C# script _Character Classes/Vital:_
+
+```
+public class Vital : ModifiedStat {
+	private int _curValue;
+
+	public Vital(){
+		_curValue = 0;
+		ExpToLevel = 50;
+		LevelModifier = 1.1f;
+	}
+
+	public int CurrentValue{
+		get{ 
+			if(_curValue > AdjustedBaseValue){
+				// Don't let current value exceed maximum value
+				_curValue = AdjustedBaseValue;
+			}
+			return _curValue;
+		}
+		set{ _curValue = value; }
+	}
+}
+
+public enum VitalName{
+	Health,
+	Energy,
+	Mana
+}
+```
+
+- Create C# script _Character Classes/Skill:_
+
+```
+public class Skill : ModifiedStat {
+	private bool _known;
+
+	public Skill(){
+		_known = false;
+		ExpToLevel = 25;
+		LevelModifier = 1.1f;
+	}
+
+	public bool Known{
+		get{ return _known;}
+		set{_known = value;}
+	}
+}
+
+public enum SkillName {
+	// Could be Mace, Shield, etc... we're keeping it simple
+	Melee_Offense,
+	Melee_Defense,
+	Ranged_Offense,
+	Ranged_Defense,
+	Magic_Offense,
+	Magic_Defense
+}
+```
+
+Base Character Class 1/3 - 3/3
+==============================
