@@ -1171,17 +1171,30 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/032-unity3d-tutoria
 
 This section discusses how to save player data, how to make prefabs (which are super important for generating enemies, etc, via code!!!), how to make game objects persist between scenes, how to load objects via code, how to move between scenes, how to pick the very first scene that loads on game start.
 
-- `PlayerPrefs` is a unity class that saves player preference data to file
 - `DontDestroyOnLoad (this);` --> Don't destroy this object (script)! When change scene to scene, the object survives so data is still accessible!!!
+
+- `PlayerPrefs` is a unity class that saves player preference data to file
 - `PlayerPrefs.SetString(key, value);` saves player's preference data. See manual for where data is saved if interested.
+- `PlayerPrefs.DeleteAll ();` removes everything from PlayerPrefs; seems to be necessary... he encountered some caching issue
+
+- `//Todo` creates todos which can be listed at the bottom of mono developer
+
 - Go to _Character Generator_ scene
 - Click _Game Object > Create Empty_ and name it *__Game Settings*
 - Drag _GameSettings_ script onto *__GameSettings* game object
 - _Game Object > Create Empty_ and zero everything out on Transform by using reset and name it _Player Character_ and attach _PlayerCharacter_ script to the object
+
 - Create folder _Prefabs_ and right click folder and select _Create > Prefab_ then rename the prefab to _Player Character Prefab._
 - A prefab is a blueprint for creating game objects. You can select the prefab and drop it into scene's hierarchy.
 - Click and drag _Player Character_ game object from the hierarchy onto the new prefab. Notice the _Player Character_ game object in hierarchy now has blue text and the prefab now has a blue cube icon. Delete the _Player Character_ game object from hierarchy.
 - Earlier we added `public GameObject playerPrefab;` to script _CharacterGenerator._ In Unity, click _Main Camera) and look at _Character Generator (Script)._ Click and drag the player prefab onto the player prefab parameter.
+
+
+
+- `Screen.width` returns width of screen
+- `GameObject.Find()` can be used to get a game object by name. `GetComponent()` can get a script, etc,  from the game object.
+- `Application.LoadLevel()` can load a scene by name, given that the scene has been added to `File > Build Settings > Scenes in Build`.
+- You can style a label like a button to make a disabled button: `GUI.Label (new Rect (...), "Create", "Button");`
 
 - To create an object via code:
 
@@ -1219,36 +1232,486 @@ _toon = pc.GetComponent <PlayerCharacter> ();
 
 - Create a level: _File > Build Settings_ then click and drag your scenes into the big "scenes to build" area. The scene you want to load first should be listed first. Close popup. Save project. 
  
-
-
-
-
 - Create C# script _Scripts/GameSettings_:
 
 ```
-TODO TODO TODO 
+using UnityEngine;
+using System.Collections;
+using System;                 // <-- ACCESS TO ENUM CLASS!
+
+public class GameSettings : MonoBehaviour {
+
+	void Awake(){
+		DontDestroyOnLoad (this);
+	}
+
+	// Use this for initialization
+	void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+
+	public void SaveCharacterData(){
+		GameObject pc = GameObject.Find ("pc");
+		PlayerCharacter pcClass = pc.GetComponent <PlayerCharacter> ();
+
+		PlayerPrefs.DeleteAll ();
+
+		PlayerPrefs.SetString ("Player Name", pcClass.Name);
+
+		// Save attribute values
+		for(int cnt=0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++){
+			PlayerPrefs.SetInt (
+				((AttributeName)cnt).ToString () + " - Base Value",
+				pcClass.GetPrimaryAttribute (cnt).BaseValue);
+
+			PlayerPrefs.SetInt (
+				((AttributeName)cnt).ToString () + " - Exp To Level",
+				pcClass.GetPrimaryAttribute (cnt).ExpToLevel);
+		}
+
+		// Save vital values
+		for(int cnt=0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++){
+			PlayerPrefs.SetInt (
+				((VitalName)cnt).ToString () + " - Base Value",
+				pcClass.GetVital (cnt).BaseValue);
+			
+			PlayerPrefs.SetInt (
+				((VitalName)cnt).ToString () + " - Exp To Level",
+				pcClass.GetVital (cnt).ExpToLevel);
+
+			PlayerPrefs.SetInt (
+				((VitalName)cnt).ToString () + " - Current Value",
+				pcClass.GetVital (cnt).CurrentValue);
+
+			PlayerPrefs.SetString (
+				((VitalName)cnt).ToString () + " - Mods",
+				pcClass.GetVital (cnt).GetModifyingAttributeString());
+		}
+
+		// Save skill values
+		for(int cnt=0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++){
+			PlayerPrefs.SetInt (
+				((SkillName)cnt).ToString () + " - Base Value",
+				pcClass.GetSkill (cnt).BaseValue);
+			
+			PlayerPrefs.SetInt (
+				((SkillName)cnt).ToString () + " - Exp To Level",
+				pcClass.GetSkill (cnt).ExpToLevel);
+
+			PlayerPrefs.SetString (
+				((SkillName)cnt).ToString () + " - Mods",
+				pcClass.GetSkill (cnt).GetModifyingAttributeString());
+
+		}
+	}
+
+	public void LoadCharacterData(){
+	}
+}
 ```
 
 - Edit script _CharacterGenerator:_
 
 ```
-TODO TODO TODO
+using UnityEngine;
+using System.Collections;
+using System;               // <-- FOR ENUM!!
+
+public class CharacterGenerator : MonoBehaviour {
+	private PlayerCharacter _toon;
+	private const int STARTING_POINTS = 281;
+	private const int MIN_STARTING_ATTRIBUTE_VALUE = 10;
+	private const int STARTING_VALUE = 50;
+	private int pointsLeft;
+
+	public GUIStyle myStyle;
+	public GUISkin mySkin;
+	public GameObject playerPrefab;
+
+	// Use this for initialization
+	void Start () {
+		GameObject pc = 
+		Instantiate (
+			playerPrefab,         // The prefab
+			Vector3.zero,         // (0,0,0)
+			Quaternion.identity) // Direction parent is in
+				as GameObject;
+		pc.name = "pc";
+
+//		_toon = new PlayerCharacter (); // <-- This will create a warning that says cannot use 'new' keyword. Actually, you can... just not a great way of doing it. He says he'll show a different method later.
+//		_toon.Awake ();
+		_toon = pc.GetComponent <PlayerCharacter> ();
+
+		pointsLeft = STARTING_POINTS;
+
+		for (int cnt = 0; cnt < Enum.GetValues (typeof(AttributeName)).Length; cnt++) {
+			_toon.GetPrimaryAttribute(cnt).BaseValue = STARTING_VALUE;
+			pointsLeft -= (STARTING_VALUE - MIN_STARTING_ATTRIBUTE_VALUE);
+		}
+		_toon.StatUpdate ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	}
+
+	void OnGUI(){
+		GUI.skin = mySkin;
+		DisplayName ();
+		DisplayPointsLeft ();
+		DisplayAttributes ();
+		DisplayVitals ();
+		DisplaySkills ();
+
+		if(_toon.Name == "" || pointsLeft > 0){
+			DisplayCreateLabel ();
+		} else {
+			DisplayCreateButton ();
+		}
+	}
+
+	private void DisplayName(){
+		GUI.Label(new Rect(10, 10, 50, 25), "Name:");
+		_toon.Name = GUI.TextField (new Rect (65, 10, 100, 25), _toon.Name);
+	}
+
+	private void DisplayAttributes(){
+		for(int cnt = 0; cnt < Enum.GetValues (typeof(AttributeName)).Length; cnt++){
+			int top = 40 + (cnt * 25);
+			GUI.Label (new Rect(10,  // X
+			                    top, // Y
+			                    100, // WIDTH
+			                    25   // HEIGHT
+				), ((AttributeName)cnt).ToString (), 
+			           myStyle  // <-- GUIStyle & GUI.skin --- use the background image!
+			    );
+
+			GUI.Label (new Rect(115, top, 30, 25), _toon.GetPrimaryAttribute(cnt).AdjustedBaseValue.ToString());
+			if(GUI.Button(new Rect(150, top, 25, 25), "-")){
+				if(_toon.GetPrimaryAttribute(cnt).BaseValue > MIN_STARTING_ATTRIBUTE_VALUE){
+					_toon.GetPrimaryAttribute(cnt).BaseValue--;
+					pointsLeft++;
+					_toon.StatUpdate ();
+				}
+			}
+			if(GUI.Button(new Rect(180, // <-- IF BUTTON CLICKED
+			                       top, 
+			                       25, 
+			                       25
+			    ), "+",
+			   		myStyle  // <-- GUIStyle & GUI.skin --- use the background image!
+			   	)){
+				if(pointsLeft > 0){
+					_toon.GetPrimaryAttribute(cnt).BaseValue++;
+					pointsLeft--;
+					_toon.StatUpdate ();
+				}
+			}
+		}
+	}
+
+	private void DisplayVitals(){
+		for(int cnt = 0; cnt < Enum.GetValues (typeof(VitalName)).Length; cnt++){
+			int top = 40 + ((cnt+7) * 25);
+			GUI.Label (new Rect(10, top, 100, 25), ((VitalName)cnt).ToString ());
+			GUI.Label (new Rect(115, top, 30, 25), _toon.GetVital(cnt).AdjustedBaseValue.ToString());
+		}
+	}
+
+	private void DisplaySkills(){
+		for(int cnt = 0; cnt < Enum.GetValues (typeof(SkillName)).Length; cnt++){
+			int top = 40 + (cnt * 25);
+			GUI.Label (new Rect(250, top, 100, 25), ((SkillName)cnt).ToString ());
+			GUI.Label (new Rect(355, top, 100, 25), _toon.GetSkill(cnt).AdjustedBaseValue.ToString());
+		}
+	}
+
+	private void DisplayPointsLeft(){
+		GUI.Label(new Rect(250, 10, 100, 25), "Points Left: "+pointsLeft);
+	}
+
+	private void DisplayCreateLabel(){
+		GUI.Label (new Rect (
+				Screen.width / 2 - 50, // center of screen
+				40 + (10 * 25),
+				100,
+				25
+			), 
+		    "Set name & use all points before continuing",
+		    "Button");
+	}
+
+	private void DisplayCreateButton(){
+		if (GUI.Button (new Rect (
+			Screen.width / 2 - 50, // center of screen
+			40 + (10 * 25),
+			100,
+			25
+			), "Create")) {
+
+			GameObject gs = GameObject.Find ("__GameSettings");
+			GameSettings gsScript = gs.GetComponent<GameSettings>();
+
+			// change the current value of vitals to the max modified value of that vital
+			UpdateCurVitalValues();
+
+			gsScript.SaveCharacterData();
+			Application.LoadLevel ("hackandslash"); // Scene name
+		}
+	}
+
+	private void UpdateCurVitalValues(){
+		for (int cnt=0; cnt<Enum.GetValues (typeof(VitalName)).Length; cnt++) {
+			_toon.GetVital (cnt).CurrentValue = _toon.GetVital (cnt).AdjustedBaseValue;
+		}
+	}
+
+}
 ```
 
 - Edit script _BaseCharacter:_
 
 ```
-TODO TODO TODO
+using UnityEngine;
+using System.Collections;
+using System;               // <-- So can quickly access enum class
+
+public class BaseCharacter : MonoBehaviour {
+	private string _name;
+	private int _level;
+	private uint _freeExp;
+
+	private Attribute[] _primaryAttribute;
+	private Vital[] _vital;
+	private Skill[] _skill;
+
+	public void Awake(){
+		_name = string.Empty;
+		_level = 0;
+		_freeExp = 0;
+
+		// Make array the same size as number of items in Enum
+		_primaryAttribute = new Attribute[Enum.GetValues (typeof(AttributeName)).Length];
+		_vital = new Vital[Enum.GetValues (typeof(VitalName)).Length];
+		_skill = new Skill[Enum.GetValues (typeof(SkillName)).Length];
+
+		SetupPrimaryAttributes ();
+		SetupVitals ();
+		SetupSkills ();
+	}
+
+	public string Name{
+		get{ return _name; }
+		set{ _name = value;}
+	}
+
+	public int Level{
+		get{ return _level; }
+		set{ _level = value;}
+	}
+
+	public uint FreeExp{
+		get{ return _freeExp; }
+		set{ _freeExp = value;}
+	}
+
+	public void AddExp(uint exp){
+		_freeExp += exp;
+		CalculateLevel ();
+	}
+
+	public void CalculateLevel(){
+		//TODO Take the average of all the player's skills and assign that as player level	
+	}
+
+	private void SetupPrimaryAttributes(){
+		for (int cnt = 0; cnt < _primaryAttribute.Length; cnt++) {
+			_primaryAttribute[cnt] = new Attribute();
+			_primaryAttribute[cnt].Name = ((AttributeName)cnt).ToString ();
+		}
+	}
+
+	private void SetupVitals(){
+		for (int cnt = 0; cnt < _vital.Length; cnt++) {
+			_vital[cnt] = new Vital();
+		}
+		SetupVitalModifiers (); // <--- ADDED FOR CHARACTER CREATION 4/5
+	}
+
+	private void SetupSkills(){
+		for (int cnt = 0; cnt < _skill.Length; cnt++) {
+			_skill[cnt] = new Skill();
+		}
+		SetupSkillModifiers (); // <--- ADDED FOR CHARACTER CREATION 4/5
+	}
+
+	public Attribute GetPrimaryAttribute(int index){
+		return _primaryAttribute [index];
+	}
+	public Vital GetVital(int index){
+		return _vital [index];
+	}
+	public Skill GetSkill(int index){
+		return _skill [index];
+	}
+
+	private void SetupVitalModifiers(){
+		// THIS CODE IS PRETTY ROUGH BECAUSE HE SAID UNITY 2.X IS NOT CAPABLE OF THINGS UNITY 3.X IS CAPABLE OF
+		// health --- Add half of our constitution to health
+		ModifyingAttribute health = new ModifyingAttribute ();
+		health.attribute = GetPrimaryAttribute ((int)AttributeName.Constitution);
+		health.ratio = 0.5f; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
+
+		GetVital ((int)VitalName.Health).AddModifier (health);
+		GetVital ((int)VitalName.Health).AddModifier (
+			new ModifyingAttribute{
+				attribute = GetPrimaryAttribute((int)AttributeName.Constitution), 
+				ratio = 0.5f
+			}
+		);
+
+		// energy
+		ModifyingAttribute energyModifier = new ModifyingAttribute ();
+		energyModifier.attribute = GetPrimaryAttribute ((int)AttributeName.Constitution);
+		energyModifier.ratio = 1; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
+
+		GetVital ((int)VitalName.Energy).AddModifier (energyModifier);
+
+		// mana
+		ModifyingAttribute manaModifier = new ModifyingAttribute ();
+		manaModifier.attribute = GetPrimaryAttribute ((int)AttributeName.Willpower);
+		manaModifier.ratio = 1; // how much of that particular attribute goes to modifying vital (half of constitution is assigned to health)
+		
+		GetVital ((int)VitalName.Mana).AddModifier (manaModifier);
+	}
+
+	private void SetupSkillModifiers(){
+		ModifyingAttribute MeleeOffenseModifier1 = new ModifyingAttribute ();
+		ModifyingAttribute MeleeOffenseModifier2 = new ModifyingAttribute ();
+
+		MeleeOffenseModifier1.attribute = GetPrimaryAttribute ((int)AttributeName.Might);
+		MeleeOffenseModifier1.ratio = .33f; // --> Add third of might to melee
+
+		MeleeOffenseModifier2.attribute = GetPrimaryAttribute ((int)AttributeName.Nimbleness);
+		MeleeOffenseModifier2.ratio = .33f; // --> Add third of nimbleness to melee
+
+		GetSkill ((int)SkillName.Melee_Offense).AddModifier (MeleeOffenseModifier1);
+		GetSkill ((int)SkillName.Melee_Offense).AddModifier (MeleeOffenseModifier2);
+	}
+
+	public void StatUpdate(){
+		for (int cnt = 0; cnt < _vital.Length; cnt++) {
+			_vital[cnt].Update ();
+		}
+		for (int cnt = 0; cnt < _skill.Length; cnt++) {
+			_skill[cnt].Update ();
+		}
+	}
+}
 ```
 
 - Edit script _Attribute:_
 
 ```
-TODO TODO TODO
+public class Attribute : BaseStat{
+	private string _name;
+
+	public Attribute(){
+		_name = "";
+		ExpToLevel = 50;
+		LevelModifier = 1.05f;
+	}
+	public string Name {
+		get{ return _name;}
+		set{ _name = value;}
+	}
+}
+
+public enum AttributeName {
+	Might,
+	Constitution,
+	Nimbleness,
+	Speed,
+	Concentration,
+	Willpower,
+	Charisma
+}
 ```
 
 - Edit script _ModifiedStat:_
 
 ```
-TODO TODO TODO
+using System.Collections.Generic;
+
+public class ModifiedStat : BaseStat{
+	private List<ModifyingAttribute> _mods;   // A list of attributes that modify the stat
+	private int _modValue;                    // Amount added to base value of modifiers
+
+	public ModifiedStat(){
+		_mods = new List<ModifyingAttribute> ();
+		_modValue = 0;
+	}
+
+	public void AddModifier(ModifyingAttribute mod){
+		_mods.Add (mod);
+	}
+
+	private void CalculateModValue(){
+		_modValue = 0;
+		if (_mods.Count > 0) {
+			foreach (ModifyingAttribute att in _mods) {
+				_modValue += (int)(att.attribute.AdjustedBaseValue * att.ratio);
+			}
+		}
+	}
+
+	public new int AdjustedBaseValue{
+		get{ return BaseValue + BuffValue + _modValue; }
+	}
+
+	public void Update(){
+		CalculateModValue ();
+	}
+
+	public string GetModifyingAttributeString(){
+		string temp = "";
+
+//		UnityEngine.Debug.Log (_mods.Count);
+
+		for (int cnt = 0; cnt < _mods.Count; cnt++) {
+			temp += _mods[cnt].attribute.Name
+				+ "_"
+				+ _mods[cnt].ratio;
+
+			if(cnt < _mods.Count - 1){
+				temp += "|";
+			}
+
+			UnityEngine.Debug.Log (temp);
+		}
+		return temp;
+	}
+}
+
+public struct ModifyingAttribute{
+	public Attribute attribute;
+	public float ratio;
+
+	public ModifyingAttribute(Attribute att, float rat){
+		attribute = att;
+		ratio = rat;
+	}
+}
 ```
+
+- To debug: `UnityEngine.Debug.Log ()`
+
+
+Instantiating our Character 1/5 - 5/5
+=====================================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/033-unity3d-tutorial-instantiating-our-character-1x
