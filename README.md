@@ -1166,8 +1166,9 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/027-unity3d-tutoria
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/028-unity3d-tutorial-playerprefs-2x
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/029-unity3d-tutorial-playerprefs-3x
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/030-unity3d-tutorial-playerprefs-4x
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/031-unity3d-tutorial-playerprefs-5x
 
-This section discusses how to save player data, how to make prefabs (which are super important for generating enemies, etc, via code!!!), how to make game objects persist between scenes, how to load objects via code, and how to move between scenes.
+This section discusses how to save player data, how to make prefabs (which are super important for generating enemies, etc, via code!!!), how to make game objects persist between scenes, how to load objects via code, how to move between scenes, how to pick the very first scene that loads on game start.
 
 - `PlayerPrefs` is a unity class that saves player preference data to file
 - `DontDestroyOnLoad (this);` --> Don't destroy this object (script)! When change scene to scene, the object survives so data is still accessible!!!
@@ -1233,3 +1234,20 @@ TODO TODO TODO
 TODO TODO TODO
 ```
 
+- Edit script _BaseCharacter:_
+
+```
+TODO TODO TODO
+```
+
+- Edit script _Attribute:_
+
+```
+TODO TODO TODO
+```
+
+- Edit script _ModifiedStat:_
+
+```
+TODO TODO TODO
+```
