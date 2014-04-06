@@ -1167,6 +1167,7 @@ http://www.burgzergarcade.com/tutorials/game-engines/unity3d/028-unity3d-tutoria
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/029-unity3d-tutorial-playerprefs-3x
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/030-unity3d-tutorial-playerprefs-4x
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/031-unity3d-tutorial-playerprefs-5x
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/032-unity3d-tutorial-playerprefs-6x
 
 This section discusses how to save player data, how to make prefabs (which are super important for generating enemies, etc, via code!!!), how to make game objects persist between scenes, how to load objects via code, how to move between scenes, how to pick the very first scene that loads on game start.
 
