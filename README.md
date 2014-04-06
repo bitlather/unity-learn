@@ -1715,3 +1715,9 @@ public struct ModifyingAttribute{
 Instantiating our Character 1/5 - 5/5
 =====================================
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/033-unity3d-tutorial-instantiating-our-character-1x
+
+Learned how to load PlayerPref data
+
+- _File > New Scene_ saved as _Level 1_ and double click scene to ensure you're editing it
+- Create C# _Script/GameMaster_
+- Create empty game object named _  Game Master_ prefixed with two spaces.
