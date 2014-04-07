@@ -1721,3 +1721,52 @@ Learned how to load PlayerPref data
 - _File > New Scene_ saved as _Level 1_ and double click scene to ensure you're editing it
 - Create C# _Script/GameMaster_
 - Create empty game object named _  Game Master_ prefixed with two spaces.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Instantiating our Character 1/5 - 5/5
+
+=====================================
+
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/033-unity3d-tutorial-instantiating-our-character-1x
+
+
+
+Learned how to load PlayerPref data
+
+
+
+- _File > New Scene_ saved as _Level 1_ and double click scene to ensure you're editing it
+
+
+- Create C# _Script/GameMaster:_
+
+
+```
+TODO TODO TODO
+```
+
+- Create empty game object named _  Game Master_ prefixed with two spaces.
+
+- Drag _GameMaster_ script onto _Game Master_ game object
+
+- Drag the player character prefab into GameMaster parameter _Player Character_
+
+- Install blender so you can use a 3d model: http://download.blender.org/release/Blender2.56beta/
+
+- Download _249HumanAnimated_ from his assets: http://www.burgzergarcade.com/catalog/educational/3d-models/humanoid ... unzip it, *right click the .blend file and make sure it opens with blender*, then click and drag _249HumanAnimated.blend_ into _Assets._
+
+- Note: There are some good assets for learning at burgzergarcade.com
