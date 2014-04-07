@@ -1770,3 +1770,17 @@ TODO TODO TODO
 - Download _249HumanAnimated_ from his assets: http://www.burgzergarcade.com/catalog/educational/3d-models/humanoid ... unzip it, *right click the .blend file and make sure it opens with blender*, then click and drag _249HumanAnimated.blend_ into _Assets._
 
 - Note: There are some good assets for learning at burgzergarcade.com
+
+
+```
+ERROR ERROR ERROR
+ERROR ERROR ERROR
+ERROR ERROR ERROR
+ERROR ERROR ERROR
+ERROR ERROR ERROR
+
+Blender could not convert the .blend file to FBX file.
+You need to use Blender 2.45-2.49 or 2.58 and later versions for direct Blender import to work.
+
+FIX DOCUMENTATION!!!!
+```
