@@ -1738,7 +1738,6 @@ Learned how to load PlayerPref data
 
 
 Instantiating our Character 1/5 - 5/5
-
 =====================================
 
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/033-unity3d-tutorial-instantiating-our-character-1x
