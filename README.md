@@ -1739,24 +1739,89 @@ Learned how to load PlayerPref data
 
 Instantiating our Character 1/5 - 5/5
 =====================================
-
 http://www.burgzergarcade.com/tutorials/game-engines/unity3d/033-unity3d-tutorial-instantiating-our-character-1x
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/034-unity3d-tutorial-instantiating-our-character-2x
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/035-unity3d-tutorial-instantiating-our-character-3x
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/036-unity3d-tutorial-instantiating-our-character-4x
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/037-unity3d-tutorial-instantiating-our-character-55
 
-
-
-Learned how to load PlayerPref data
-
-
+Learned how to load PlayerPref data, work with 3d model that has a skeleton, cameras that follow an object. I stopped paying attention around the fourth tutorial because it was loading data from PlayerPref, which is easy and I would probably like to replace with a database. Also, I did not want to get too deep into how he implemented stats.
 
 - _File > New Scene_ saved as _Level 1_ and double click scene to ensure you're editing it
 
-
 - Create C# _Script/GameMaster:_
 
+```
+using UnityEngine;
+using System.Collections;
 
+public class GameMaster : MonoBehaviour {
+	public GameObject playerCharacter; // The prefab w/ 3d model
+	public Camera mainCamera;          // The camera that will follow player around
+	public GameObject gameSettings;
+
+	public float zOffset;
+	public float yOffset;
+	public float xRotationOffset;
+	
+	private GameObject _pc;            // Cached instantiated object
+
+	private PlayerCharacter _pcScript;
+
+	// Use this for initialization
+	void Start () {
+		_pc = (GameObject)Instantiate (        // Put player character in game world
+			playerCharacter,  
+			Vector3.zero,    // Center of world
+			Quaternion.identity); // "facing straight ahead" is what author said
+		_pc.name = "pc";
+		_pcScript = _pc.GetComponent<PlayerCharacter>();
+
+		//mainCamera.transform.position = _pc.transform.position; // Camera is on top of player character model
+
+		zOffset = -2.5f;
+		yOffset = 2.5f;
+		xRotationOffset = 22.5f;
+
+		mainCamera.transform.position = new Vector3 (
+			_pc.transform.position.x,
+			_pc.transform.position.y + yOffset,
+			_pc.transform.position.z + zOffset);
+		mainCamera.transform.Rotate (
+			xRotationOffset, 
+			0, 
+			0);
+
+		LoadCharacter ();
+	}
+
+	public void LoadCharacter(){
+		GameObject gs = GameObject.Find ("__GameSettings");
+
+		if (gs == null) {
+			// Instantiate game settings if not set
+			GameObject gs1 = Instantiate(gameSettings, Vector3.zero, Quaternion.identity) as GameObject;
+			gs1.name = "__GameSettings";
+		}
+		GameSettings gsScript = GameObject.Find ("__GameSettings").GetComponent<GameSettings>();
+
+		gsScript.LoadCharacterData ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}
 ```
-TODO TODO TODO
-```
+
+- `Quaternion.identity` is "facing straight ahead," according to the author.
+
+- `Camera` object
+
+- `_pcScript = _pc.GetComponent<PlayerCharacter>();` to get the _pc object's PlayerCharacter script.
+
+- `GameSettings gsScript = GameObject.Find ("__GameSettings").GetComponent<GameSettings>();` to get the _GameSettings_ script associated with the GameSettings object
 
 - Create empty game object named _  Game Master_ prefixed with two spaces.
 
@@ -1764,22 +1829,165 @@ TODO TODO TODO
 
 - Drag the player character prefab into GameMaster parameter _Player Character_
 
-- Install blender so you can use a 3d model: http://download.blender.org/release/Blender2.56beta/
+- Install blender so you can use a 3d model: http://www.blender.org/download/ When I tried to use the version from the tutorial, I got this error: _Blender could not convert the .blend file to FBX file. You need to use Blender 2.45-2.49 or 2.58 and later versions for direct Blender import to work._ This is likely because my version of unity is much newer (4.3.x). So I installed Blender 2.7 then reimported the object by clicking and dragging the .blend file into assets. It worked!
 
 - Download _249HumanAnimated_ from his assets: http://www.burgzergarcade.com/catalog/educational/3d-models/humanoid ... unzip it, *right click the .blend file and make sure it opens with blender*, then click and drag _249HumanAnimated.blend_ into _Assets._
 
 - Note: There are some good assets for learning at burgzergarcade.com
 
+- Drag the _Player Character Prefab_ into _Hierarchy. Drag 249HumanAnimated onto the prefab. Zero out the transform for both the prefab and the 3d model. Now drag the prefab from Hierarchy into your assets prefab folder on top of the old _Player Character Prefab_ to replace it. Delete prefab from hierarchy (because it gets loaded by script on runtime).
+
+- _Game Object > Create Other_ and add a directional light. Move to (1000,1000,0) to get it out of the way. Rotate to (30,50,14) to get good light. Add `public Camera mainCamera;` to GameMaster script then, in unity, drop the camera onto the script parameter. When playing, you can move character in scene editor to see how things look.
+
+- In File > Build Settings, add _Level 1_ to list of scenes. Edit CharacterGenerator script so it loads _Level 1_ on confirm. Now, if you play game from _Character Generator_ scene, the __GameSettings object will persist to _Level 1._
+
+- But... we don't want to enter name every time. So create new prefab named _Game Settings._ Then go into character generator scene and drag _Game Settings_ object from hierarchy to prefab. Go to scene _Level 1._ Edit script _GameMaster_ by adding `public GameObject gameSettings;`. Save script and in unity, click and drag prefab onto the _Game Master_ hierarchy object's game settings parameter.
+
+- Edit script GameSettings:
 
 ```
-ERROR ERROR ERROR
-ERROR ERROR ERROR
-ERROR ERROR ERROR
-ERROR ERROR ERROR
-ERROR ERROR ERROR
+using UnityEngine;
+using System.Collections;
+using System;                 // <-- ACCESS TO ENUM CLASS!
 
-Blender could not convert the .blend file to FBX file.
-You need to use Blender 2.45-2.49 or 2.58 and later versions for direct Blender import to work.
+public class GameSettings : MonoBehaviour {
 
-FIX DOCUMENTATION!!!!
+	void Awake(){
+		DontDestroyOnLoad (this);
+	}
+
+	// Use this for initialization
+	void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+
+	public void SaveCharacterData(){
+		GameObject pc = GameObject.Find ("pc");
+		PlayerCharacter pcClass = pc.GetComponent <PlayerCharacter> ();
+
+		PlayerPrefs.DeleteAll ();
+
+		PlayerPrefs.SetString ("Player Name", pcClass.Name);
+
+		// Save attribute values
+		for(int cnt=0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++){
+			PlayerPrefs.SetInt (
+				((AttributeName)cnt).ToString () + " - Base Value",
+				pcClass.GetPrimaryAttribute (cnt).BaseValue);
+
+			PlayerPrefs.SetInt (
+				((AttributeName)cnt).ToString () + " - Exp To Level",
+				pcClass.GetPrimaryAttribute (cnt).ExpToLevel);
+		}
+
+		// Save vital values
+		for(int cnt=0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++){
+			PlayerPrefs.SetInt (
+				((VitalName)cnt).ToString () + " - Base Value",
+				pcClass.GetVital (cnt).BaseValue);
+			
+			PlayerPrefs.SetInt (
+				((VitalName)cnt).ToString () + " - Exp To Level",
+				pcClass.GetVital (cnt).ExpToLevel);
+
+			PlayerPrefs.SetInt (
+				((VitalName)cnt).ToString () + " - Current Value",
+				pcClass.GetVital (cnt).CurrentValue);
+
+			PlayerPrefs.SetString (
+				((VitalName)cnt).ToString () + " - Mods",
+				pcClass.GetVital (cnt).GetModifyingAttributeString());
+		}
+
+		// Save skill values
+		for(int cnt=0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++){
+			PlayerPrefs.SetInt (
+				((SkillName)cnt).ToString () + " - Base Value",
+				pcClass.GetSkill (cnt).BaseValue);
+			
+			PlayerPrefs.SetInt (
+				((SkillName)cnt).ToString () + " - Exp To Level",
+				pcClass.GetSkill (cnt).ExpToLevel);
+
+			PlayerPrefs.SetString (
+				((SkillName)cnt).ToString () + " - Mods",
+				pcClass.GetSkill (cnt).GetModifyingAttributeString());
+
+		}
+	}
+
+	public void LoadCharacterData(){
+		// LIKELY BROKEN. I STOPPED CARING ABOUT THIS FUNCTION IN VIDEO [ Instantiating our Character 4/5 ] BECAUSE I AM NOT SOLD ON USING PLAYPREF.
+		GameObject pc = GameObject.Find ("pc");
+		PlayerCharacter pcClass = pc.GetComponent <PlayerCharacter> ();
+				
+		pcClass.Name = PlayerPrefs.GetString ("Player Name", "Name Me");
+
+		// Load attribute values
+		for(int cnt=0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++){
+			pcClass.GetPrimaryAttribute (cnt).BaseValue = 
+				PlayerPrefs.GetInt (
+				((AttributeName)cnt).ToString () + " - Base Value",
+				0);
+			
+			pcClass.GetPrimaryAttribute (cnt).ExpToLevel =
+				PlayerPrefs.GetInt (
+					((AttributeName)cnt).ToString () + " - Exp To Level",
+					0);
+		}
+		
+		// Load vital values
+		for(int cnt=0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++){
+			pcClass.GetVital (cnt).BaseValue =
+				PlayerPrefs.GetInt (
+					((VitalName)cnt).ToString () + " - Base Value",
+					0);
+			
+			pcClass.GetVital (cnt).ExpToLevel=
+				PlayerPrefs.GetInt (
+					((VitalName)cnt).ToString () + " - Exp To Level",
+					0);
+			
+			pcClass.GetVital (cnt).CurrentValue =
+				PlayerPrefs.GetInt (
+					((VitalName)cnt).ToString () + " - Current Value",
+					0);
+
+// COMMENT OUT FOR NOW B/C NEEDS PARSING ETC
+//			pcClass.GetVital (cnt).GetModifyingAttributeString() = 
+//				PlayerPrefs.GetString (
+//					((VitalName)cnt).ToString () + " - Mods",
+//					0);
+		}
+		
+		// Load skill values
+		for(int cnt=0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++){
+			pcClass.GetSkill (cnt).BaseValue =
+				PlayerPrefs.GetInt (
+					((SkillName)cnt).ToString () + " - Base Value",
+					0);
+				
+			pcClass.GetSkill (cnt).ExpToLevel = 
+				PlayerPrefs.GetInt (
+					((SkillName)cnt).ToString () + " - Exp To Level",
+					0);
+
+// COMMENT OUT FOR NOW B/C NEEDS PARSING ETC
+//			PlayerPrefs.SetString (
+//				((SkillName)cnt).ToString () + " - Mods",
+//				pcClass.GetSkill (cnt).GetModifyingAttributeString());
+			
+		}
+	}
+
+}
+
+
 ```
+
+- `PlayerPrefs.GetString()` can take a default value as second param if key not found
