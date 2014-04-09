@@ -1991,3 +1991,493 @@ public class GameSettings : MonoBehaviour {
 ```
 
 - `PlayerPrefs.GetString()` can take a default value as second param if key not found
+
+
+NOTE
+====
+Four tutorials before this were skipped because just code cleanup.
+
+Player Spawn Point 1/2-2/2
+==========================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/042-unity3d-tutorial-player-spawn-point-12
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/043-unity3d-tutorial-player-spawn-point-22
+
+Learned how to spawn character on map.
+
+- Edit scene _Level 1_ by adding a terrain via GameObject. You can make bumps, etc, clicking the terrain 
+
+object in hierarchy and using tools under _Terrain (Script)_ in Inspector. You can also add textures; just 
+
+click around.
+
+- Create empty game object named _Player Spawn Point._ Drag it to where you want to spawn. Move it up a bit on 
+
+the Y axis because when it spawns, it will fall to the earth.
+
+- Edit script _GameSettings:_
+
+```
+public const string PLAYER_SPAWN_POINT = "Player Spawn Point"; // Name of game object
+```
+
+- Edit script _GameMaster:_
+
+```
+using UnityEngine;
+using System.Collections;
+
+public class GameMaster : MonoBehaviour {
+	public GameObject playerCharacter; // The prefab w/ 3d model
+	public Camera mainCamera;          // The camera that will follow player around
+	public GameObject gameSettings;
+
+	public float zOffset;
+	public float yOffset;
+	public float xRotationOffset;
+	
+	private GameObject _pc;            // Cached instantiated object
+
+	private PlayerCharacter _pcScript;
+
+	private Vector3 _playerSpawnPointPosition;
+
+	// Use this for initialization
+	void Start () {
+		_playerSpawnPointPosition = new Vector3 (32, 3, 21); // default position for player spawn 
+
+point
+		GameObject go = GameObject.Find (GameSettings.PLAYER_SPAWN_POINT);
+		if (go == null) {
+			Debug.Log("cannot find spawn point; creating one");
+			go = new GameObject(GameSettings.PLAYER_SPAWN_POINT);
+			go.transform.position = _playerSpawnPointPosition;
+		}
+
+		_pc = (GameObject)Instantiate (        // Put player character in game world
+			playerCharacter,  
+			Vector3.zero,    // Center of world
+			Quaternion.identity); // "facing straight ahead" is what author said
+		_pc.name = "pc";
+		_pcScript = _pc.GetComponent<PlayerCharacter>();
+
+		_pc.transform.position = go.transform.position;
+
+		//mainCamera.transform.position = _pc.transform.position; // Camera is on top of player 
+
+character model
+
+		zOffset = -2.5f;
+		yOffset = 2.5f;
+		xRotationOffset = 22.5f;
+
+		mainCamera.transform.position = new Vector3 (
+			_pc.transform.position.x,
+			_pc.transform.position.y + yOffset,
+			_pc.transform.position.z + zOffset);
+		mainCamera.transform.Rotate (
+			xRotationOffset, 
+			0, 
+			0);
+
+		LoadCharacter ();
+	}
+
+	public void LoadCharacter(){
+		GameObject gs = GameObject.Find ("__GameSettings");
+
+		if (gs == null) {
+			// Instantiate game settings if not set
+			GameObject gs1 = Instantiate(gameSettings, Vector3.zero, Quaternion.identity) as 
+
+GameObject;
+			gs1.name = "__GameSettings";
+		}
+		GameSettings gsScript = GameObject.Find ("__GameSettings").GetComponent<GameSettings>();
+
+		gsScript.LoadCharacterData ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}
+```
+
+
+Getting CSharp Messenger Extended & GUITexture Healthbar 1/3 - 3/3
+===================================================================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/044-unity3d-tutorial-getting-csharpmessenger-
+
+extended
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/045-unity3d-tutorial-guitexture-healthbar-13
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/046-unity3d-tutorial-guitexture-healthbar-23
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/047-unity3d-tutorial-guitexture-healthbar-33
+
+Learned how to message between objects, set up mob health bar and player health bar.
+
+- We will use this wiki page: http://wiki.unity3d.com/index.php?title=CSharpMessenger_Extended
+
+- Create C# script _Scripts/MessengerExtended/CallBack_ and delete everything, then paste the following (from 
+
+the wiki page):
+
+```
+// MessengerUnitTest.cs v1.0 by Magnus Wolffelt, magnus.wolffelt@gmail.com
+//
+// Delegates used in Messenger.cs.
+ 
+public delegate void Callback();
+public delegate void Callback<T>(T arg1);
+public delegate void Callback<T, U>(T arg1, U arg2);
+public delegate void Callback<T, U, V>(T arg1, U arg2, V arg3);
+```
+
+- Create C# script _Scripts/MessengerExtended/Messenger_ and delete everything, then paste the following (from 
+
+the wiki page):
+
+```
+// Messenger.cs v1.0 by Magnus Wolffelt, magnus.wolffelt@gmail.com
+//
+// Inspired by and based on Rod Hyde's Messenger:
+// http://www.unifycommunity.com/wiki/index.php?title=CSharpMessenger
+//
+// This is a C# messenger (notification center). It uses delegates
+// and generics to provide type-checked messaging between event producers and
+// event consumers, without the need for producers or consumers to be aware of
+// each other. The major improvement from Hyde's implementation is that
+// there is more extensive error detection, preventing silent bugs.
+//
+// Usage example:
+// Messenger<float>.AddListener("myEvent", MyEventHandler);
+// ...
+// Messenger<float>.Broadcast("myEvent", 1.0f);
+ 
+ 
+using System;
+using System.Collections.Generic;
+ 
+public enum MessengerMode {
+	DONT_REQUIRE_LISTENER,
+	REQUIRE_LISTENER,
+}
+ 
+ 
+static internal class MessengerInternal {
+	static public Dictionary<string, Delegate> eventTable = new Dictionary<string, Delegate>();
+	static public readonly MessengerMode DEFAULT_MODE = MessengerMode.REQUIRE_LISTENER;
+ 
+	static public void OnListenerAdding(string eventType, Delegate listenerBeingAdded) {
+		if (!eventTable.ContainsKey(eventType)) {
+			eventTable.Add(eventType, null);
+		}
+ 
+		Delegate d = eventTable[eventType];
+		if (d != null && d.GetType() != listenerBeingAdded.GetType()) {
+			throw new ListenerException(string.Format("Attempting to add listener with 
+
+inconsistent signature for event type {0}. Current listeners have type {1} and listener being added has type 
+
+{2}", eventType, d.GetType().Name, listenerBeingAdded.GetType().Name));
+		}
+	}
+ 
+	static public void OnListenerRemoving(string eventType, Delegate listenerBeingRemoved) {
+		if (eventTable.ContainsKey(eventType)) {
+			Delegate d = eventTable[eventType];
+ 
+			if (d == null) {
+				throw new ListenerException(string.Format("Attempting to remove listener with 
+
+for event type {0} but current listener is null.", eventType));
+			} else if (d.GetType() != listenerBeingRemoved.GetType()) {
+				throw new ListenerException(string.Format("Attempting to remove listener with 
+
+inconsistent signature for event type {0}. Current listeners have type {1} and listener being removed has type 
+
+{2}", eventType, d.GetType().Name, listenerBeingRemoved.GetType().Name));
+			}
+		} else {
+			throw new ListenerException(string.Format("Attempting to remove listener for type {0} 
+
+but Messenger doesn't know about this event type.", eventType));
+		}
+	}
+ 
+	static public void OnListenerRemoved(string eventType) {
+		if (eventTable[eventType] == null) {
+			eventTable.Remove(eventType);
+		}
+	}
+ 
+	static public void OnBroadcasting(string eventType, MessengerMode mode) {
+		if (mode == MessengerMode.REQUIRE_LISTENER && !eventTable.ContainsKey(eventType)) {
+			throw new MessengerInternal.BroadcastException(string.Format("Broadcasting message {0} 
+
+but no listener found.", eventType));
+		}
+	}
+ 
+	static public BroadcastException CreateBroadcastSignatureException(string eventType) {
+		return new BroadcastException(string.Format("Broadcasting message {0} but listeners have a 
+
+different signature than the broadcaster.", eventType));
+	}
+ 
+	public class BroadcastException : Exception {
+		public BroadcastException(string msg)
+			: base(msg) {
+		}
+	}
+ 
+	public class ListenerException : Exception {
+		public ListenerException(string msg)
+			: base(msg) {
+		}
+	}
+}
+ 
+ 
+// No parameters
+static public class Messenger {
+	private static Dictionary<string, Delegate> eventTable = MessengerInternal.eventTable;
+ 
+	static public void AddListener(string eventType, Callback handler) {
+		MessengerInternal.OnListenerAdding(eventType, handler);
+		eventTable[eventType] = (Callback)eventTable[eventType] + handler;
+	}
+ 
+	static public void RemoveListener(string eventType, Callback handler) {
+		MessengerInternal.OnListenerRemoving(eventType, handler);	
+		eventTable[eventType] = (Callback)eventTable[eventType] - handler;
+		MessengerInternal.OnListenerRemoved(eventType);
+	}
+ 
+	static public void Broadcast(string eventType) {
+		Broadcast(eventType, MessengerInternal.DEFAULT_MODE);
+	}
+ 
+	static public void Broadcast(string eventType, MessengerMode mode) {
+		MessengerInternal.OnBroadcasting(eventType, mode);
+		Delegate d;
+		if (eventTable.TryGetValue(eventType, out d)) {
+			Callback callback = d as Callback;
+			if (callback != null) {
+				callback();
+			} else {
+				throw MessengerInternal.CreateBroadcastSignatureException(eventType);
+			}
+		}
+	}
+}
+ 
+// One parameter
+static public class Messenger<T> {
+	private static Dictionary<string, Delegate> eventTable = MessengerInternal.eventTable;
+ 
+	static public void AddListener(string eventType, Callback<T> handler) {
+		MessengerInternal.OnListenerAdding(eventType, handler);
+		eventTable[eventType] = (Callback<T>)eventTable[eventType] + handler;
+	}
+ 
+	static public void RemoveListener(string eventType, Callback<T> handler) {
+		MessengerInternal.OnListenerRemoving(eventType, handler);
+		eventTable[eventType] = (Callback<T>)eventTable[eventType] - handler;
+		MessengerInternal.OnListenerRemoved(eventType);
+	}
+ 
+	static public void Broadcast(string eventType, T arg1) {
+		Broadcast(eventType, arg1, MessengerInternal.DEFAULT_MODE);
+	}
+ 
+	static public void Broadcast(string eventType, T arg1, MessengerMode mode) {
+		MessengerInternal.OnBroadcasting(eventType, mode);
+		Delegate d;
+		if (eventTable.TryGetValue(eventType, out d)) {
+			Callback<T> callback = d as Callback<T>;
+			if (callback != null) {
+				callback(arg1);
+			} else {
+				throw MessengerInternal.CreateBroadcastSignatureException(eventType);
+			}
+		}
+	}
+}
+ 
+ 
+// Two parameters
+static public class Messenger<T, U> {
+	private static Dictionary<string, Delegate> eventTable = MessengerInternal.eventTable;
+ 
+	static public void AddListener(string eventType, Callback<T, U> handler) {
+		MessengerInternal.OnListenerAdding(eventType, handler);
+		eventTable[eventType] = (Callback<T, U>)eventTable[eventType] + handler;
+	}
+ 
+	static public void RemoveListener(string eventType, Callback<T, U> handler) {
+		MessengerInternal.OnListenerRemoving(eventType, handler);
+		eventTable[eventType] = (Callback<T, U>)eventTable[eventType] - handler;
+		MessengerInternal.OnListenerRemoved(eventType);
+	}
+ 
+	static public void Broadcast(string eventType, T arg1, U arg2) {
+		Broadcast(eventType, arg1, arg2, MessengerInternal.DEFAULT_MODE);
+	}
+ 
+	static public void Broadcast(string eventType, T arg1, U arg2, MessengerMode mode) {
+		MessengerInternal.OnBroadcasting(eventType, mode);
+		Delegate d;
+		if (eventTable.TryGetValue(eventType, out d)) {
+			Callback<T, U> callback = d as Callback<T, U>;
+			if (callback != null) {
+				callback(arg1, arg2);
+			} else {
+				throw MessengerInternal.CreateBroadcastSignatureException(eventType);
+			}
+		}
+	}
+}
+ 
+ 
+// Three parameters
+static public class Messenger<T, U, V> {
+	private static Dictionary<string, Delegate> eventTable = MessengerInternal.eventTable;
+ 
+	static public void AddListener(string eventType, Callback<T, U, V> handler) {
+		MessengerInternal.OnListenerAdding(eventType, handler);
+		eventTable[eventType] = (Callback<T, U, V>)eventTable[eventType] + handler;
+	}
+ 
+	static public void RemoveListener(string eventType, Callback<T, U, V> handler) {
+		MessengerInternal.OnListenerRemoving(eventType, handler);
+		eventTable[eventType] = (Callback<T, U, V>)eventTable[eventType] - handler;
+		MessengerInternal.OnListenerRemoved(eventType);
+	}
+ 
+	static public void Broadcast(string eventType, T arg1, U arg2, V arg3) {
+		Broadcast(eventType, arg1, arg2, arg3, MessengerInternal.DEFAULT_MODE);
+	}
+ 
+	static public void Broadcast(string eventType, T arg1, U arg2, V arg3, MessengerMode mode) {
+		MessengerInternal.OnBroadcasting(eventType, mode);
+		Delegate d;
+		if (eventTable.TryGetValue(eventType, out d)) {
+			Callback<T, U, V> callback = d as Callback<T, U, V>;
+			if (callback != null) {
+				callback(arg1, arg2, arg3);
+			} else {
+				throw MessengerInternal.CreateBroadcastSignatureException(eventType);
+			}
+		}
+	}
+}
+```
+
+- Create prefab _Prefabs/Player Health Bar Prefab_
+
+- _GameObjects > Create Other > GUI Texture._ Drop an image in the texture's GUITexture section of Inspector. 
+
+Set width to 200, height 30. Play with the position; I settled on <0.15, 0.98, 0>. 
+
+- Drop script VitalBar onto the texture.
+
+- Drag texture onto _Player Health Bar Prefab._
+
+- Delete texture then drop prefab into hierarchy.
+
+- Duplicate _Player Health Bar Prefab_ and rename to _Mob Health Bar Prefab._ (I duplicated by dragging the 
+
+prefab from inspector into assets).
+
+- Drag _Mob Health Bar Prefab_ onto Hierarchy. Set X position to 0.7.
+
+- Check out wiki link from earlier for info on how to message
+
+- Create C# script _Scripts/HUD Classes/VitalBar:_
+
+```
+using UnityEngine;
+using System.Collections;
+
+// Display vitals for player or a mob
+public class VitalBar : MonoBehaviour {
+	public bool _isPlayerHealthbar;
+	private int _maxBarLength;        // length of bar at 100% health
+	private int _curBarLength;
+	private GUITexture _display;
+
+	// Use this for initialization
+	void Start () {
+//		_isPlayerHealthbar = true; // Set in inspector for now
+		_display = gameObject.GetComponent<GUITexture> ();
+		_maxBarLength = (int)_display.pixelInset.width;
+		OnEnable ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+
+	public void SetPlayerHealthBar(bool b){
+		_isPlayerHealthbar = b;
+	}
+
+	public void OnChangeHealthBarSize(int curHealth, int maxHealth){
+//		Debug.Log ("We heard a health event: "+curHealth+" / "+maxHealth);
+		_curBarLength = (int)(1.0 * curHealth / maxHealth * _maxBarLength);
+		_display.pixelInset = new Rect(
+			_display.pixelInset.x, 
+			_display.pixelInset.y, 
+			_curBarLength, 
+			_display.pixelInset.height);
+
+	}
+
+	public void OnEnable(){
+		// listen to broadcast messages sent from other objects
+		if(_isPlayerHealthbar){
+			Messenger<int, int>.AddListener("player health update", OnChangeHealthBarSize);
+		} else {
+			Messenger<int, int>.AddListener("mob health update", OnChangeHealthBarSize);
+		}
+
+	}
+
+	public void OnDisable(){
+		// stop listening for broadcast messages
+		if(_isPlayerHealthbar){
+			Messenger<int, int>.RemoveListener("player health update", OnChangeHealthBarSize);
+		} else {
+			Messenger<int, int>.RemoveListener("mob health update", OnChangeHealthBarSize);
+		}
+	}
+}
+```
+
+- Note the `Messenger<int, int>.AddListener("player health update", OnChangeHealthBarSize);` which is tied to 
+
+the messenger class we got from the wiki earlier on - this is not a Unity specific thing.
+
+- Note: For scripts associated with a prefab, you can use `gameObject` to reference the Game Object associated 
+
+with the prefab!
+
+- To set manipulate width of a GUITexture: `_guiTextureVariable.pixelInset.width;` (can also be discovered in 
+
+Inspector)
+
+- Edit script _PlayerCharacter:_
+
+```
+public class PlayerCharacter : BaseCharacter {
+	void Update(){
+		Messenger<int, int>.Broadcast ("player health update", 80, 100);
+	}
+}
+```
+
+- Note the `Messenger<int, int>.Broadcast("player health update", 80, 100);` which is tied to the messenger 
+
+class we got from the wiki earlier on - this is not a Unity specific thing.
