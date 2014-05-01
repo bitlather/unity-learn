@@ -2640,3 +2640,145 @@ public class Mob : BaseCharacter {
 
 - Disable _Cast Shadows_ on name objects to save render time
 
+
+Spawn Points And Spawning Mobs 1/3-3/3
+======================================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/055-unity3d-tutorial-spawn-points-and-spawning-mobs-13
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/056-unity3d-tutorial-spawn-points-and-spawning-mobs-23
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/057-unity3d-tutorial-spawn-points-and-spawning-mobs-33
+
+In this tutorial, we will create a mob generator prefab that randomly generates an enemy for each of its spawn points.
+
+*Yield return 0* can be used to let the rest of the code continue to run from inside a Start() function, so a heavy loop won't bog everything down.
+
+*Awake() is always called before every other function in the script. You can set member variables here.*
+
+*Here is how to parent a GameObject via script:*
+
+```
+GameObject go = Instantiate (someGameObjectEnemyPrefab,
+    someGameObjectSpawnPoint.transform.position,
+    Quaternion.identity
+    ) as GameObject;
+go.transform.parent = gos[cnt].transform; // This creates hierarchy!!!
+```
+
+- Create empty object named _Spawn Point_ and tag it as _Respawn._
+
+- Create prefab _Spawn Point._ Drag _Spawn Point_ object onto the prefab.
+
+- Copy the _Spawn Point_ object in hierarchy and paste until there are three. Move them around a little bit. Name them _Spawn Point 1,_ _Spawn Point 2,_ etc.
+
+- Create C# script _MobGenerator:_
+
+```
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class MobGenerator : MonoBehaviour {
+	public enum State{
+		Idle,
+		Initialize,
+		Setup,
+		SpawnMob
+	}
+
+	public GameObject[] mobPrefabs;
+	public GameObject[] spawnPoints;
+	public State state;
+
+	void Awake(){
+		this.state = State.Initialize;
+	}
+
+	// Use this for initialization
+	IEnumerator Start () {
+		while (true) {
+			switch(this.state){
+			case State.Initialize:
+				Initialize();
+				break;
+			case State.Setup:
+				Setup ();
+				break;
+			case State.SpawnMob:
+				SpawnMob ();
+				break;
+			}
+
+			yield return 0; // Stop at every frame and let the rest of your application run
+		}
+	}
+
+	private void Initialize(){
+		Debug.Log ("*** We are in the Initialize function ***");
+
+		if (!CheckForMobPrefabs ()) {
+			return;
+		}
+
+		if (!CheckForSpawnPoints ()) {
+			return;
+		}
+
+		this.state = State.Setup;
+	}
+
+	private void Setup(){
+		Debug.Log ("*** We are in the Setup function ***");
+		this.state = State.SpawnMob;
+	}
+
+	private void SpawnMob(){
+		Debug.Log ("*** We are in the SpawnMob function ***");
+
+		GameObject[] gos = AvailableSpawnPoints ();
+
+		// spawn random mob
+		for (int cnt = 0; cnt < gos.Length; cnt++) {
+			GameObject go = Instantiate (mobPrefabs[Random.Range (0, mobPrefabs.Length)],
+				gos[cnt].transform.position,
+			    Quaternion.identity
+			    ) as GameObject;
+			go.transform.parent = gos[cnt].transform;
+		}
+
+		this.state = State.Idle;
+	}
+
+	private bool CheckForMobPrefabs(){
+		if (this.mobPrefabs.Length > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	private bool CheckForSpawnPoints(){
+		if (this.spawnPoints.Length > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	// generate list of available spawn points that do not have any mobs childed to it
+	private GameObject[] AvailableSpawnPoints(){
+		List<GameObject> gos = new List<GameObject> ();
+		for (int cnt = 0; cnt < this.spawnPoints.Length; cnt++) {
+			if(this.spawnPoints[cnt].transform.childCount == 0){
+				Debug.Log ("*** Spawn Point Available **");
+				gos.Add (this.spawnPoints[cnt]);
+			}
+		}
+		return gos.ToArray ();
+	}
+}
+```
+
+- `!!!` `yield return 0; // Stop at every frame and let the rest of your application run.` Can be used in Start() function. Start() should return type IENumerable instead of void when using this.
+
+- Create empty object named `  Mob Generator` (two empty spaces as prefix). Attach MobGenerator script to it.
+
+- In project assets, copy and paste _mob_Slug_ twice. Rename them to _mob_Fire Slug_ and _mob_Water Slug_. _Movie 1 around 6:40 he creates textures for the different slugs._ Set materials so they look different - may need to duplicate a material for this to work.
+
+- Movie 1 10:23, in the _Mob Generator_ object in the hierarchy, change size of _Mob Prefabs_ to 3 and drag the three slugs from project assets into each element. Set _Spawn Points_ to the three spawn points in the hierarchy.
