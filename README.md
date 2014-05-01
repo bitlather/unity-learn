@@ -2119,7 +2119,6 @@ Learned how to message between objects, set up mob health bar and player health 
 - We will use this wiki page: http://wiki.unity3d.com/index.php?title=CSharpMessenger_Extended
 
 - Create C# script _Scripts/MessengerExtended/CallBack_ and delete everything, then paste the following (from 
-
 the wiki page):
 
 ```
@@ -2133,8 +2132,7 @@ public delegate void Callback<T, U>(T arg1, U arg2);
 public delegate void Callback<T, U, V>(T arg1, U arg2, V arg3);
 ```
 
-- Create C# script _Scripts/MessengerExtended/Messenger_ and delete everything, then paste the following (from 
-
+- Create C# script _Scripts/MessengerExtended/Messenger_ and delete everything, then paste the following (from
 the wiki page):
 
 ```
@@ -2376,9 +2374,7 @@ static public class Messenger<T, U, V> {
 
 - Create prefab _Prefabs/Player Health Bar Prefab_
 
-- _GameObjects > Create Other > GUI Texture._ Drop an image in the texture's GUITexture section of Inspector. 
-
-Set width to 200, height 30. Play with the position; I settled on <0.15, 0.98, 0>. 
+- _GameObjects > Create Other > GUI Texture._ Drop an image in the texture's GUITexture section of Inspector. Set width to 200, height 30. Play with the position; I settled on <0.15, 0.98, 0>. 
 
 - Drop script VitalBar onto the texture.
 
@@ -2387,7 +2383,6 @@ Set width to 200, height 30. Play with the position; I settled on <0.15, 0.98, 0
 - Delete texture then drop prefab into hierarchy.
 
 - Duplicate _Player Health Bar Prefab_ and rename to _Mob Health Bar Prefab._ (I duplicated by dragging the 
-
 prefab from inspector into assets).
 
 - Drag _Mob Health Bar Prefab_ onto Hierarchy. Set X position to 0.7.
@@ -2457,15 +2452,12 @@ public class VitalBar : MonoBehaviour {
 ```
 
 - Note the `Messenger<int, int>.AddListener("player health update", OnChangeHealthBarSize);` which is tied to 
-
 the messenger class we got from the wiki earlier on - this is not a Unity specific thing.
 
 - Note: For scripts associated with a prefab, you can use `gameObject` to reference the Game Object associated 
-
 with the prefab!
 
 - To set manipulate width of a GUITexture: `_guiTextureVariable.pixelInset.width;` (can also be discovered in 
-
 Inspector)
 
 - Edit script _PlayerCharacter:_
@@ -2478,6 +2470,173 @@ public class PlayerCharacter : BaseCharacter {
 }
 ```
 
-- Note the `Messenger<int, int>.Broadcast("player health update", 80, 100);` which is tied to the messenger 
+- Note the `Messenger<int, int>.Broadcast("player health update", 80, 100);` which is tied to the messenger class we got from the wiki earlier on - this is not a Unity specific thing.
 
-class we got from the wiki earlier on - this is not a Unity specific thing.
+
+
+Note
+====
+Skipped a few code cleanup tutorials.
+
+Mob Class 1/1
+===================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/050-unity3d-tutorial-mob-class
+
+- Create C# script _Scripts/Mob:_
+
+```
+using UnityEngine;
+using System.Collections;
+
+public class Mob : BaseCharacter {
+
+	// Use this for initialization
+	void Start () {
+		GetPrimaryAttribute ((int)AttributeName.Constitution).BaseValue = 100;
+		GetVital ((int)VitalName.Health).Update ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		Messenger<int, int>.Broadcast ("mob health update", 80, 100);
+	}
+}
+```
+
+- Download http://www.burgzergarcade.com/product/educational-use/3d-models/ball-tail-mob and unzip it. Drag the .blend file into assets.
+
+- Create prefab _Prefabs/Mob_Slug._ Drag slug into hierarchy. Drag mob script onto slug in hierarchy. Drag slug from hierarchy to prefab. Delete the slug from hierarchy. Drop prefab onto hierarchy and position it near player character (pc when playing.). 
+
+- Duplicate the slug a few times in hierarchy
+
+Targetting 2.0 1/3 - 3/3
+========================
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/051-unity3d-tutorial-targetting-20-13
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/052-unity3d-tutorial-targetting-20-23
+http://www.burgzergarcade.com/tutorials/game-engines/unity3d/054-unity3d-tutorial-targeting-20-33
+
+Show enemy name when targetting enemy and update health bar. I had a bug in my code and didn't feel like fixing it - so be warned, the mob health bar will not update!!!
+
+By parenting a gameobject, it redefines what position 0,0,0 means.
+
+- Tag each Mob_Slug as Enemy; also tag the Prefab as Enemy.
+
+- _GameObject > Create Other > 3d Text._ Rename to _Name._ Set anchor to lower center and zero its position. Drag text onto one of the mobs in hierarchy to parent it. Reset position again to center it on the slug. May want to move it up a bit to be above the slug. Uncheck _Mesh Renderer_ in inspector and click apply to apply to all slugs.
+
+- (!) Click `Apply` in Inspector to apply changes to in-game object to its prefab. Also updates all other instances in the scene.
+
+- Create script _TargetMob.cs_ (basically, Targetting.cs with edits, specifically to SelectTarget() and DeselectTarget()):
+
+```
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic; // Need this for lists!
+
+public class TargetMob : MonoBehaviour {
+	public List<Transform> targets;
+	public Transform selectedTarget;
+	private Transform myTransform;
+	
+	// Use this for initialization
+	void Start () {
+		targets = new List<Transform> ();
+		selectedTarget = null;
+		AddAllEnemies ();
+		myTransform = transform; // Cache it!!!
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (Input.GetKeyDown (KeyCode.Tab)) {
+			TargetEnemy();
+		}
+	}
+	
+	public void AddAllEnemies(){
+		GameObject[] go = GameObject.FindGameObjectsWithTag ("Enemy");
+		foreach (GameObject enemy in go) {
+			AddTarget(enemy.transform);
+		}
+	}
+	
+	private void SortTargetsByDistance(){
+		targets.Sort (delegate(Transform t1, Transform t2) {
+			return (Vector3.Distance(t1.position, myTransform.position)
+			        .CompareTo (Vector3.Distance (t2.position, myTransform.position)));
+		});
+	}
+	
+	public void AddTarget(Transform enemy){
+		targets.Add (enemy);
+	}
+	
+	private void TargetEnemy(){
+		if (selectedTarget == null) {
+			// If no targets, select closest
+			SortTargetsByDistance ();
+			selectedTarget = targets [0];
+		} else {
+			int index = targets.IndexOf (selectedTarget);
+			if(index < targets.Count - 1){
+				index++;
+			} else {
+				index = 0;
+			}
+			DeselectTarget ();
+			selectedTarget = targets[index];
+		}
+		SelectTarget();
+	}
+	
+	public void DeselectTarget(){
+		selectedTarget.FindChild ("Name").GetComponent<MeshRenderer> ().enabled = false;
+		selectedTarget = null;
+	}
+	
+	private void SelectTarget(){
+		Transform name = selectedTarget.FindChild ("Name");
+		if (name == null) {
+			Debug.LogError("Could not find the Name on " + selectedTarget.name);
+			return;
+		}
+		name.GetComponent<TextMesh> ().text = selectedTarget.GetComponent<Mob> ().Name;
+		name.GetComponent<MeshRenderer> ().enabled = true;
+		selectedTarget.GetComponent<Mob> ().DisplayHealth ();
+	}
+}
+```
+
+- Drag TargetMob script onto Game Master object.
+
+- When gameobject has child in hierarchy, you can select it using `gameObject.FindChild ("ChildObjectName");`
+
+- Edit script _Mob.cs:_
+
+```
+using UnityEngine;
+using System.Collections;
+
+public class Mob : BaseCharacter {
+	public int curHealth;
+	public int maxHealth;
+
+	// Use this for initialization
+	void Start () {
+//		GetPrimaryAttribute ((int)AttributeName.Constitution).BaseValue = 100;
+//		GetVital ((int)VitalName.Health).Update ();
+		Name = "Slug Mob";
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		DisplayHealth ();
+	}
+
+	public void DisplayHealth(){
+		Messenger<int, int>.Broadcast ("mob health update", curHealth, maxHealth);
+	}
+}
+```
+
+- Disable _Cast Shadows_ on name objects to save render time
+
