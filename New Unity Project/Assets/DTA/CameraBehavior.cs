@@ -20,7 +20,7 @@ public class CameraBehavior : MonoBehaviour {
 		MinRotationX = 15,
 		MaxRotationX = 75;
 
-	public void Initiate(int playerNumber, int numberOfPlayers){
+	public void Initiate(GameObject parentGameObject, int playerNumber, int numberOfPlayers){
 		// Create cursor
 		this.Cursor = GameObject.CreatePrimitive (PrimitiveType.Cube);
 
@@ -30,6 +30,12 @@ public class CameraBehavior : MonoBehaviour {
 		// Create another game object to attach camera to so angle does not get wonky
 		GameObject cameraAngleCursor = GameObject.CreatePrimitive (PrimitiveType.Cube);
 		cameraAngleCursor.renderer.enabled = false;
+
+		// Make the cursor's parent the parent object to keep hierarchy clean
+		this.Cursor.transform.parent = parentGameObject.transform;
+
+		// Make the camera angle's parent the cursor to keep hierarchy clean
+		cameraAngleCursor.transform.parent = this.Cursor.transform;
 
 		// Initialize camera
 		this.PlayerCamera = (Camera)cameraAngleCursor.AddComponent(typeof(Camera));
@@ -53,26 +59,23 @@ public class CameraBehavior : MonoBehaviour {
 
 		// Set viewport rect and camera name
 		if(numberOfPlayers == 1 && playerNumber == 1){
-			this.Cursor.name = "Camera.Player1.Cursor";
+			this.Cursor.name = "Player1.Cursor";
 			this.PlayerCamera.rect = new Rect(0, 0, 1, 1);
 			cameraAngleCursor.name = "Angle";
 		}
 		else if (numberOfPlayers == 2 && playerNumber == 1){
-			this.Cursor.name = "Camera.Player1.Cursor";
+			this.Cursor.name = "Player1.Cursor";
 			this.PlayerCamera.rect = new Rect(0, 0, 0.5F, 1);
 			cameraAngleCursor.name = "Angle";
 		}
 		else if (numberOfPlayers == 2 && playerNumber == 2){
-			this.Cursor.name = "Camera.Player2.Cursor";
+			this.Cursor.name = "Player2.Cursor";
 			this.PlayerCamera.rect = new Rect(0.5F, 0, 0.5F, 1);
 			cameraAngleCursor.name = "Angle";
 		}
 		else {
 			Debug.LogError ("Can't handle number of players or player number");
 		}
-
-		// Make the camera angle's parent the cursor to keep hierarchy clean
-		cameraAngleCursor.transform.parent = this.Cursor.transform;
 		
 		// Set cursor position
 		this.Cursor.transform.position = new Vector3 (0, MaxPositionY, 0);

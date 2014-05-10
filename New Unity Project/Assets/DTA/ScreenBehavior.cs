@@ -37,20 +37,20 @@ public class ScreenBehavior : MonoBehaviour {
 		if (this.Players == 1) {
 			throw new UnityException("OOPS - HUD IS BROKEN FOR SOME REASON!!!");
 			this.CameraPlayer1 = gameObject.AddComponent<CameraBehavior>();
-			this.CameraPlayer1.Initiate (1, 1);
+			this.CameraPlayer1.Initiate (gameObject, 1, 1);
 		}
 		else if (this.Players == 2 && !this.IsSplitScreen){
 			throw new UnityException("NOT IMPLEMENTED - HUD IS SCREWED UP FOR SOME REASON");
 			this.CameraPlayer1 = gameObject.AddComponent<CameraBehavior>();
-			this.CameraPlayer1.Initiate (1, 1);
+			this.CameraPlayer1.Initiate (gameObject, 1, 1);
 			// DO OTHER STUFF LIKE PREVENT PLAYERS FROM BEING TOO FAR AWAY FROM EACH OTHER
 		}
 		else if (this.Players == 2 && this.IsSplitScreen){
 			this.CameraPlayer1 = gameObject.AddComponent<CameraBehavior>();
-			this.CameraPlayer1.Initiate (1, 2);
+			this.CameraPlayer1.Initiate (gameObject, 1, 2);
 
 			this.CameraPlayer2 = gameObject.AddComponent<CameraBehavior>();
-			this.CameraPlayer2.Initiate (2, 2);
+			this.CameraPlayer2.Initiate (gameObject, 2, 2);
 
 			this.GapTexture = new Texture2D(1, 1);
 			this.GapTexture.SetPixel(0,0,Color.black);
