@@ -1,0 +1,176 @@
+
+<!-- saved from url=(0324)http://view.atdmt.com/CNT/iview/472761483/direct;wi.728;hi.90/01/746847660?click=http://a.tribalfusion.com/h.click/armQ0x4svU0bMZaUmqq4mZbdRPbC3WBnXWYDnHAo56YP5cj6UVvlVG7jRPFMUdZbPWFjP2UZawVT7nTTv6PqZbKRVbZdPFuxSt79UVM35U6nodan0EPp3HMESGbE26JZbpHTOVdjhYFM7YFbh1TiMSb3ZcWUJXTtUWmFQoRbrnXTro5EYf2av5mEJDXUJdWWfTomfBMrMBwIt02V/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>att_smb_728x90_Refresh</title>
+<meta http-equiv="expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+</head><body style="border-width:0px;margin:0px;" bgcolor="White" marginwidth="0" marginheight="0"><img width="0" height="0" src="event(2).gif" style="display: none;"><iframe id="iframe_397939642658" name="iframe_397939642658" width="0" height="0" src="direct;wi(1).htm" style="display: none;"></iframe><iframe id="iframe_55894056567" name="iframe_55894056567" width="0" height="0" src="t2tv3.htm" style="display: none;"></iframe>
+<script type="text/javascript">
+var nRequiredVersion = 9; 
+var bIsRightVersion = false;	
+var isIE = (navigator.appVersion.indexOf("MSIE") != -1) ? true : false;
+var isWin = (navigator.appVersion.toLowerCase().indexOf("win") != -1) ? true : false;
+var isOpera = (navigator.userAgent.indexOf("Opera") != -1) ? true : false;
+var isIE11 = (navigator.appVersion.indexOf("rv:11.0") != -1) ? true : false;
+if((isIE || isIE11) && isWin){
+document.writeln('<SCR' + 'IPT LANGUAGE=VBScript\>');
+document.writeln('on error resume next');
+document.writeln('Set oFlashPlayer = CreateObject("ShockwaveFlash.ShockwaveFlash." & nRequiredVersion)');
+document.writeln('If IsObject(oFlashPlayer) Then');
+document.writeln('bIsRightVersion = True');
+document.writeln('End If');
+document.writeln('If (Not bIsRightVersion) And (nRequiredVersion < 3) Then');
+document.writeln('Set oFlashPlayer = CreateObject("ShockwaveFlash.ShockwaveFlash")');
+document.writeln('If IsObject(oFlashPlayer) Then');
+document.writeln('bIsRightVersion = True');
+document.writeln('End If');
+document.writeln('End If');
+document.writeln('</SCR' + 'IPT\>'); 
+}
+function detectPluginWIR1393629381776() 
+{ 
+if (!bIsRightVersion) 
+{
+var flashPluginVersion;
+if (navigator.plugins && navigator.plugins.length > 0) {
+flashPluginVersion = getFlashPluginVersionForBrowser();
+bIsRightVersion = IsPluginVersionRightToPlayFlash(flashPluginVersion);
+}
+else if (navigator.userAgent.toLowerCase().indexOf("webtv/2.6") != -1)
+{
+bIsRightVersion = (4 >= nRequiredVersion);
+}
+else if (navigator.userAgent.toLowerCase().indexOf("webtv/2.5") != -1)
+{
+bIsRightVersion = (3 >= nRequiredVersion);
+}
+else if (navigator.userAgent.toLowerCase().indexOf("webtv") != -1) 
+{
+bIsRightVersion = (2 >= nRequiredVersion);
+}
+else {
+flashPluginVersion = getFlashActiveXObjectVersionForBrowser();
+bIsRightVersion = IsPluginVersionRightToPlayFlash(flashPluginVersion);
+}
+}
+}
+function getFlashPluginVersionForBrowser()
+{
+var flashPluginVersion;
+if (navigator.plugins["Shockwave Flash 2.0"] || navigator.plugins["Shockwave Flash"]) {
+var swVer2 = navigator.plugins["Shockwave Flash 2.0"] ? " 2.0" : "";
+var flashDescription = navigator.plugins["Shockwave Flash" + swVer2].description;
+var descArray = flashDescription.split(" ");
+flashPluginVersion = descArray[2].split(".");
+}
+else{
+var type = 'application/x-shockwave-flash';
+var mimeTypes = navigator.mimeTypes;
+if (mimeTypes && mimeTypes[type] && mimeTypes[type].enabledPlugin && mimeTypes[type].enabledPlugin.description) {
+flashPluginVersion = mimeTypes[type].enabledPlugin.description.replace(/^.*?([0-9]+)\.([0-9])+.*$/, '$1,$2').split(',');
+}
+}
+return flashPluginVersion;
+}
+function getFlashActiveXObjectVersionForBrowser()
+{
+var flashPluginVersion;
+var flashObj = null;
+try { flashObj = new ActiveXObject('ShockwaveFlash.ShockwaveFlash'); } catch (ex) { bIsRightVersion = false; }
+if (flashObj != null) {
+var fV;
+try { fV = flashObj.GetVariable("$version"); } catch (err) { bIsRightVersion = false; }
+flashPluginVersion = fV.replace(/^.*?([0-9]+,[0-9]+).*$/, '$1').split(',');
+}
+return flashPluginVersion;
+}
+function IsPluginVersionRightToPlayFlash(flashPluginVersion) 
+{ 
+var requiredFlashVersion = nRequiredVersion.toString().split("."); 
+var requiredFlashVersionMajor = requiredFlashVersion[0];
+var requiredFlashVersionMinor = requiredFlashVersion[1];
+requiredFlashVersionMinor = requiredFlashVersionMinor || 0;
+if (flashPluginVersion) {
+var flashPluginVersionMajor = parseInt(flashPluginVersion[0], 10);
+var flashPluginVersionMinor = parseInt(flashPluginVersion[1], 10);
+return (requiredFlashVersionMajor < flashPluginVersionMajor) || ((requiredFlashVersionMajor == flashPluginVersionMajor) && (requiredFlashVersionMinor <= flashPluginVersionMinor));
+}
+else {
+return false;
+} 
+}
+detectPluginWIR1393629381776();
+var _WIR1393629381776_Instance =
+{
+click : "http://a.tribalfusion.com/h.click/armQ0x4svU0bMZaUmqq4mZbdRPbC3WBnXWYDnHAo56YP5cj6UVvlVG7jRPFMUdZbPWFjP2UZawVT7nTTv6PqZbKRVbZdPFuxSt79UVM35U6nodan0EPp3HMESGbE26JZbpHTOVdjhYFM7YFbh1TiMSb3ZcWUJXTtUWmFQoRbrnXTro5EYf2av5mEJDXUJdWWfTomfBMrMBwIt02V/",
+clickThruUrl: "http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.$num$/01/",
+imgs : []
+};
+if (!window.armapi_a1_a1)
+{
+var armapi_a1_a1 =
+{
+initialize : function(unique_id){},
+click : function(unique_id, num, suffix)
+{
+this.clickTrack(unique_id);
+this.clickThru(unique_id, num, suffix);
+},
+clickTrack : function(unique_id, num)
+{
+var instance = window[unique_id + "_Instance"];
+if (instance.click != "")
+{
+var img = new Image();
+img.src = instance.click + "http://t.atdmt.com";
+instance.imgs.push(img); 
+}
+},
+clickThru : function(unique_id, num, suffix) { 
+var instance = window[unique_id + "_Instance"];
+var url = instance.clickThruUrl.replace("$num$", num) + suffix;
+window.open(url, "_blank"); 
+}
+};
+}
+var armapi_ArmClickType = isIE || isIE11 ? "ext" : "";
+var _strContentWIR1393629381776 = '';
+if(bIsRightVersion) 
+{ 
+var strFQDN = "HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/"; 
+var index = strFQDN.indexOf("/ds/");
+strFQDN = strFQDN.substring(0, index);
+_strContentWIR1393629381776 = '' + '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="HTTP://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="idSWFWIR1393629381776" width="728" height="90">'
++ '<param name="movie" value="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/2014_MobileShareDR/att_smb_728x90_Refresh.swf?ver=1&clickTag1=!~!click!~!http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01&clickTag=!~!click!~!http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01" />'
++ '<param name="base" value="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/" />'
++ '<param name="FlashVars" value="ArmClickType='+ armapi_ArmClickType + '&unique_id=_WIR1393629381776&ArmApi=armapi_a1_a1&ArmClickUrl=http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.$num$/01/&ArmClickToken=$num$" />'
++ '<param name="quality" value="high" />'
++ '<param name="salign" value="lt" />'
++ '<param name="loop" value="true" />'
++ '<param name="wmode" value="opaque" />'
++ '<param name="allowScriptAccess" value="always" />'
++ '<embed allowScriptAccess="always" quality="high" salign="LT" loop="true" type="application/x-shockwave-flash" pluginspace="HTTP://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" base="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/" wmode="opaque" src="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/2014_MobileShareDR/att_smb_728x90_Refresh.swf?ver=1&clickTag1=!~!click!~!http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01&clickTag=!~!click!~!http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01" width="728" height="90" FlashVars="unique_id=_WIR1393629381776&ArmApi=armapi_a1_a1&ArmClickUrl=http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.$num$/01/&ArmClickToken=$num$" />'
++ '</object>'
++ '';
+var pubClickTracker = 'http://a.tribalfusion.com/h.click/armQ0x4svU0bMZaUmqq4mZbdRPbC3WBnXWYDnHAo56YP5cj6UVvlVG7jRPFMUdZbPWFjP2UZawVT7nTTv6PqZbKRVbZdPFuxSt79UVM35U6nodan0EPp3HMESGbE26JZbpHTOVdjhYFM7YFbh1TiMSb3ZcWUJXTtUWmFQoRbrnXTro5EYf2av5mEJDXUJdWWfTomfBMrMBwIt02V/';
+if (pubClickTracker.indexOf("http%3A%2F%2F") != 0 && pubClickTracker.indexOf("https%3A%2F%2F") != 0)
+pubClickTracker = encodeURIComponent(pubClickTracker);
+if ( "%OOB%" == "1" )
+_strContentWIR1393629381776 = _strContentWIR1393629381776.replace(/!~!click!~!/g,'');
+else 
+_strContentWIR1393629381776 = _strContentWIR1393629381776.replace(/!~!click!~!/g, pubClickTracker);
+} 
+else 
+{ 
+_strContentWIR1393629381776 = '<a target="_blank" href="http://a.tribalfusion.com/h.click/armQ0x4svU0bMZaUmqq4mZbdRPbC3WBnXWYDnHAo56YP5cj6UVvlVG7jRPFMUdZbPWFjP2UZawVT7nTTv6PqZbKRVbZdPFuxSt79UVM35U6nodan0EPp3HMESGbE26JZbpHTOVdjhYFM7YFbh1TiMSb3ZcWUJXTtUWmFQoRbrnXTro5EYf2av5mEJDXUJdWWfTomfBMrMBwIt02V/http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01/"><img border="0" src="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/2014_MobileShareDR/SMB_BANNER_728x90_Refresh_TP.jpg?ver=1" width="728" height="90" /></a>';
+}
+</script>
+<script type="text/javascript">document.write(_strContentWIR1393629381776);</script><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="idSWFWIR1393629381776" width="728" height="90"><param name="movie" value="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/2014_MobileShareDR/att_smb_728x90_Refresh.swf?ver=1&amp;clickTag1=http%3A%2F%2Fa.tribalfusion.com%2Fh.click%2FarmQ0x4svU0bMZaUmqq4mZbdRPbC3WBnXWYDnHAo56YP5cj6UVvlVG7jRPFMUdZbPWFjP2UZawVT7nTTv6PqZbKRVbZdPFuxSt79UVM35U6nodan0EPp3HMESGbE26JZbpHTOVdjhYFM7YFbh1TiMSb3ZcWUJXTtUWmFQoRbrnXTro5EYf2av5mEJDXUJdWWfTomfBMrMBwIt02V%2Fhttp://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01&amp;clickTag=http%3A%2F%2Fa.tribalfusion.com%2Fh.click%2FarmQ0x4svU0bMZaUmqq4mZbdRPbC3WBnXWYDnHAo56YP5cj6UVvlVG7jRPFMUdZbPWFjP2UZawVT7nTTv6PqZbKRVbZdPFuxSt79UVM35U6nodan0EPp3HMESGbE26JZbpHTOVdjhYFM7YFbh1TiMSb3ZcWUJXTtUWmFQoRbrnXTro5EYf2av5mEJDXUJdWWfTomfBMrMBwIt02V%2Fhttp://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01"><param name="base" value="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/"><param name="FlashVars" value="ArmClickType=&amp;unique_id=_WIR1393629381776&amp;ArmApi=armapi_a1_a1&amp;ArmClickUrl=http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.$num$/01/&amp;ArmClickToken=$num$"><param name="quality" value="high"><param name="salign" value="lt"><param name="loop" value="true"><param name="wmode" value="opaque"><param name="allowScriptAccess" value="always"><span id="te-f8dd-icon" style="display: block; position: absolute; opacity: 0.8; overflow: hidden; margin: 0px; padding: 0px; z-index: 100003; width: 19px; height: 15px; cursor: pointer; left: 709px; top: 0px;"><span id="te-f8dd-anch-mo" style="font-weight: normal; font-family: arial, sans-serif; font-size: 8pt; text-decoration: none; display: none;"><span style="line-height:15px;vertical-align:top;"><span style="font-size:8pt;font-weight:normal;text-transform:none;color:#000;margin: 0 13px 0 0;"></span><img width="77px" height="15px" src="get" onerror="truste.ca2.useDefaultImage()" style="margin:0;padding:0;border:none;position:absolute;right:0px;top:0;"></span></span><span id="te-f8dd-anch" style="font-weight:normal;font-family:arial,sans-serif;font-size:8pt;text-decoration:none;"><span style="line-height:15px;vertical-align:top;"><img width="19px" height="15px" style="margin:0;padding:0;border:none;position:absolute;right:0px;top:0;" src="get(1)"></span></span></span><embed allowscriptaccess="always" quality="high" salign="LT" loop="true" type="application/x-shockwave-flash" pluginspace="HTTP://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" base="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/" wmode="opaque" src="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/2014_MobileShareDR/att_smb_728x90_Refresh.swf?ver=1&amp;clickTag1=http%3A%2F%2Fa.tribalfusion.com%2Fh.click%2FarmQ0x4svU0bMZaUmqq4mZbdRPbC3WBnXWYDnHAo56YP5cj6UVvlVG7jRPFMUdZbPWFjP2UZawVT7nTTv6PqZbKRVbZdPFuxSt79UVM35U6nodan0EPp3HMESGbE26JZbpHTOVdjhYFM7YFbh1TiMSb3ZcWUJXTtUWmFQoRbrnXTro5EYf2av5mEJDXUJdWWfTomfBMrMBwIt02V%2Fhttp://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01&amp;clickTag=http%3A%2F%2Fa.tribalfusion.com%2Fh.click%2FarmQ0x4svU0bMZaUmqq4mZbdRPbC3WBnXWYDnHAo56YP5cj6UVvlVG7jRPFMUdZbPWFjP2UZawVT7nTTv6PqZbKRVbZdPFuxSt79UVM35U6nodan0EPp3HMESGbE26JZbpHTOVdjhYFM7YFbh1TiMSb3ZcWUJXTtUWmFQoRbrnXTro5EYf2av5mEJDXUJdWWfTomfBMrMBwIt02V%2Fhttp://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01" width="728" height="90" flashvars="unique_id=_WIR1393629381776&amp;ArmApi=armapi_a1_a1&amp;ArmClickUrl=http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.$num$/01/&amp;ArmClickToken=$num$"></object>
+<script type="text/javascript">
+if("0" == "1"){document.write('<scr' + 'ipt type="text/javascript" src="HTTP://cdn.atdmt.com/ds/Ad.autoLoad.js?plugin=AdChoices"></scr' + 'ipt>');}
+</script>
+<noscript>
+&lt;a target="_blank" href="http://a.tribalfusion.com/h.click/armQ0x4svU0bMZaUmqq4mZbdRPbC3WBnXWYDnHAo56YP5cj6UVvlVG7jRPFMUdZbPWFjP2UZawVT7nTTv6PqZbKRVbZdPFuxSt79UVM35U6nodan0EPp3HMESGbE26JZbpHTOVdjhYFM7YFbh1TiMSb3ZcWUJXTtUWmFQoRbrnXTro5EYf2av5mEJDXUJdWWfTomfBMrMBwIt02V/http://clk.atdmt.com/go/472761483/direct;wi.728;hi.90;ai.343431406;ct.1/01"&gt;&lt;img border="0" src="HTTP://cdn.atdmt.com/ds/CJCNTCINGWIR/2014_MobileShareDR/SMB_BANNER_728x90_Refresh_TP.jpg?ver=1" width="728" height="90" /&gt;&lt;/a&gt;
+</noscript>
+<script src="ca(3)" type="text/javascript"></script>
+<script src="dvtp_src(1).js" type="text/javascript" id="script_397939642658"></script>
+<script type="text/javascript" src="ca(4)"></script><script src="ca(5)"></script></body></html>

@@ -52,6 +52,7 @@
      <Compile Include="Assets\DTA\Hud\Battle\CharacterStats.cs" />
      <Compile Include="Assets\DTA\Hud\Battle\QuickActions.cs" />
      <Compile Include="Assets\DTA\OLDCameraBehavior.cs" />
+     <Compile Include="Assets\DTA\Ps3ControllerTest.cs" />
      <Compile Include="Assets\DTA\ScreenBehavior.cs" />
      <Compile Include="Assets\Scripts\Character Classes\Attribute.cs" />
      <Compile Include="Assets\Scripts\Character Classes\BaseCharacter.cs" />

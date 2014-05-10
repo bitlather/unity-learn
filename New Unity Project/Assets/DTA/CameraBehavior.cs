@@ -10,7 +10,7 @@ using System.Collections;
  * The camera follows the cube, so rotation does not impact forward and backward movement.
  */
 public class CameraBehavior : MonoBehaviour {
-	private int Speed = 3;
+	private int Speed = 5;
 	private GameObject Cursor;
 	private Camera PlayerCamera;
 
@@ -19,6 +19,7 @@ public class CameraBehavior : MonoBehaviour {
 		MinPositionY = 2,
 		MinRotationX = 15,
 		MaxRotationX = 75;
+
 
 	public void Initiate(GameObject parentGameObject, int playerNumber, int numberOfPlayers){
 		// Create cursor
@@ -40,6 +41,7 @@ public class CameraBehavior : MonoBehaviour {
 		// Initialize camera
 		this.PlayerCamera = (Camera)cameraAngleCursor.AddComponent(typeof(Camera));
 
+		// Initialize controller listeners
 		if (playerNumber == 1) {
 			Messenger.AddListener ("Controller: Player 1: Camera Pan Left", OnCameraPanLeft); //*DTA need to update AddListener or create a wrapper that whitelists listeners by name to make failures easier to find
 			Messenger.AddListener ("Controller: Player 1: Camera Pan Right", OnCameraPanRight);
@@ -59,17 +61,17 @@ public class CameraBehavior : MonoBehaviour {
 
 		// Set viewport rect and camera name
 		if(numberOfPlayers == 1 && playerNumber == 1){
-			this.Cursor.name = "Player1.Cursor";
+			this.Cursor.name = "Player 1 Cursor";
 			this.PlayerCamera.rect = new Rect(0, 0, 1, 1);
 			cameraAngleCursor.name = "Angle";
 		}
 		else if (numberOfPlayers == 2 && playerNumber == 1){
-			this.Cursor.name = "Player1.Cursor";
+			this.Cursor.name = "Player 1 Cursor";
 			this.PlayerCamera.rect = new Rect(0, 0, 0.5F, 1);
 			cameraAngleCursor.name = "Angle";
 		}
 		else if (numberOfPlayers == 2 && playerNumber == 2){
-			this.Cursor.name = "Player2.Cursor";
+			this.Cursor.name = "Player 2 Cursor";
 			this.PlayerCamera.rect = new Rect(0.5F, 0, 0.5F, 1);
 			cameraAngleCursor.name = "Angle";
 		}
@@ -90,9 +92,7 @@ public class CameraBehavior : MonoBehaviour {
 		this.PlayerCamera.transform.position = this.Cursor.transform.position;
 	}
 
-	void Start () {
-
-	}
+	void Start () {	}
 	
 	// Update is called once per frame
 	void Update () { }
