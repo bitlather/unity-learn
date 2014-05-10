@@ -70,6 +70,12 @@
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap Only.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap AlphaTest.shader" />
      <None Include="Assets\Standard Assets\Tessellation Shaders\BumpedSpecularDisplacement.shader" />
+ <Reference Include="Mono.Data.Sqlite">
+ <HintPath>Assets\DTA\Plugins\Mono.Data.Sqlite.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>Assets\DTA\Plugins\System.Data.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
