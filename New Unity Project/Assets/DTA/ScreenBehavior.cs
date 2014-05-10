@@ -72,6 +72,7 @@ public class ScreenBehavior : MonoBehaviour {
 	}
 
 	void OnGUI(){
+		// Draw vertical box on screen
 		if (this.Players == 2 && this.IsSplitScreen) {
 			DrawQuad(this.GapRect, Color.black);
 		}

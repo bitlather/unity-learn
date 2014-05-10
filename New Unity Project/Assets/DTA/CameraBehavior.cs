@@ -42,27 +42,38 @@ public class CameraBehavior : MonoBehaviour {
 			Messenger.AddListener ("Controller: Player 1: Camera Zoom In", OnCameraZoomIn);
 			Messenger.AddListener ("Controller: Player 1: Camera Zoom Out", OnCameraZoomOut);
 		}
+		else if (playerNumber == 2){
+			Messenger.AddListener ("Controller: Player 2: Camera Pan Left", OnCameraPanLeft); //*DTA need to update AddListener or create a wrapper that whitelists listeners by name to make failures easier to find
+			Messenger.AddListener ("Controller: Player 2: Camera Pan Right", OnCameraPanRight);
+			Messenger.AddListener ("Controller: Player 2: Camera Pan Up", OnCameraPanUp);
+			Messenger.AddListener ("Controller: Player 2: Camera Pan Down", OnCameraPanDown);
+			Messenger.AddListener ("Controller: Player 2: Camera Zoom In", OnCameraZoomIn);
+			Messenger.AddListener ("Controller: Player 2: Camera Zoom Out", OnCameraZoomOut);	
+		}
 
 		// Set viewport rect and camera name
 		if(numberOfPlayers == 1 && playerNumber == 1){
-			this.Cursor.name = "Camera.Cursor.Player1";
+			this.Cursor.name = "Camera.Player1.Cursor";
 			this.PlayerCamera.rect = new Rect(0, 0, 1, 1);
-			cameraAngleCursor.name = "Camera.Cursor.Angle.Player1";
+			cameraAngleCursor.name = "Angle";
 		}
 		else if (numberOfPlayers == 2 && playerNumber == 1){
-			this.Cursor.name = "Camera.Cursor.Player1";
+			this.Cursor.name = "Camera.Player1.Cursor";
 			this.PlayerCamera.rect = new Rect(0, 0, 0.5F, 1);
-			cameraAngleCursor.name = "Camera.Cursor.Angle.Player1";
+			cameraAngleCursor.name = "Angle";
 		}
 		else if (numberOfPlayers == 2 && playerNumber == 2){
-			this.Cursor.name = "Camera.Cursor.Player2";
+			this.Cursor.name = "Camera.Player2.Cursor";
 			this.PlayerCamera.rect = new Rect(0.5F, 0, 0.5F, 1);
-			cameraAngleCursor.name = "Camera.Cursor.Angle.Player2";
+			cameraAngleCursor.name = "Angle";
 		}
 		else {
 			Debug.LogError ("Can't handle number of players or player number");
 		}
 
+		// Make the camera angle's parent the cursor to keep hierarchy clean
+		cameraAngleCursor.transform.parent = this.Cursor.transform;
+		
 		// Set cursor position
 		this.Cursor.transform.position = new Vector3 (0, MaxPositionY, 0);
 
@@ -81,46 +92,7 @@ public class CameraBehavior : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-/*
-		bool isMoving = false;
-		if (Input.GetKey (KeyCode.UpArrow)) {
-			this.Cursor.transform.Translate(Vector3.forward * this.Speed * Time.deltaTime);
-			isMoving = true;
-		}
-		if (Input.GetKey (KeyCode.DownArrow)) {
-			this.Cursor.transform.Translate(Vector3.back * this.Speed * Time.deltaTime);
-			isMoving = true;
-		}
-		if (Input.GetKey (KeyCode.LeftArrow)) {
-			this.Cursor.transform.Translate(Vector3.left * this.Speed * Time.deltaTime);
-			isMoving = true;
-		}
-		if (Input.GetKey (KeyCode.RightArrow)) {
-			this.Cursor.transform.Translate(Vector3.right * this.Speed * Time.deltaTime);
-			isMoving = true;
-		}
-		if (Input.GetKey (KeyCode.PageDown) && this.Cursor.transform.position.y >= MinPositionY) {
-			this.Cursor.transform.Translate (Vector3.down * (this.Speed / 2) * Time.deltaTime);
-			this.Cursor.transform.Translate (Vector3.back * (this.Speed / 2) * Time.deltaTime);
-			SetCameraAngle();
-			isMoving = true;
-		}
-		if (Input.GetKey (KeyCode.PageUp) && this.Cursor.transform.position.y <= MaxPositionY) {
-			this.Cursor.transform.Translate (Vector3.up * (this.Speed / 2) * Time.deltaTime);
-			this.Cursor.transform.Translate (Vector3.forward * (this.Speed / 2) * Time.deltaTime);
-			SetCameraAngle();
-			isMoving = true;
-		}
-		if (isMoving) {
-			// Move camera if cursor moved
-			// *DTA surely there is a way to set what the camera targets so we don't have to move it like this?
-			this.PlayerCamera.transform.position = this.Cursor.transform.position;
-		}
-*/
-	}
-
-	
+	void Update () { }
 	
 	public void OnCameraPanLeft(){
 		this.Cursor.transform.Translate(Vector3.left * this.Speed * Time.deltaTime);
