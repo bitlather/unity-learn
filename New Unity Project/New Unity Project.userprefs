@@ -1,11 +1,6 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\DTA\Ps3ControllerTest.cs">
-    <Files>
-      <File FileName="..\..\..\Downloads\Joysticks (1)\Joysticks\Joystick_TutorialDemo\Assets\scripts\JoystickController.cs" Line="27" Column="1" />
-      <File FileName="Assets\DTA\Ps3ControllerTest.cs" Line="17" Column="3" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

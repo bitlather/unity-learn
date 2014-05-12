@@ -16,6 +16,8 @@ To make changes, use application `DS3 Tool`
 
 **IMPORTANT**
 
+http://www.hardcoreware.net/how-to-use-a-ps3-controller-in-windows-8/
+
 In DS3 Tool, in Local tab, set controller to PS 3 controller. To ensure things are working, click `Game Controller Panel` then `Properties`. In the screen that pops up, hit a bunch of things on the controller. Make sure all analog sticks are registered. If they aren't, restart the computer with the controller plugged in and try again.
 
 See `MotionInJoy Settings.png` for how to set it up and `MotionInJoy game controller properties.png` for how to ensure the joysticks are working.
