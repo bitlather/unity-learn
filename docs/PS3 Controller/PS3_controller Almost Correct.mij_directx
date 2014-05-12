@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <Dxinput>
+    <Auto>0</Auto>
+    <Trubo>0</Trubo>
+    <Interval>190</Interval>
+    <Duration>64</Duration>
+    <Layout>1</Layout>
+    <Maping>
+      <Item index="0" value="1403" />
+      <Item index="1" value="1503" />
+      <Item index="2" value="1603" />
+      <Item index="3" value="1703" />
+      <Item index="4" value="1003" />
+      <Item index="5" value="1103" />
+      <Item index="6" value="1203" />
+      <Item index="7" value="1303" />
+      <Item index="8" value="1002" />
+      <Item index="9" value="1302" />
+      <Item index="a" value="1102" />
+      <Item index="b" value="1202" />
+      <Item index="c" value="0" />
+      <Item index="d" value="0" />
+      <Item index="e" value="0" />
+      <Item index="f" value="1402" />
+      <Item index="10" value="1602" />
+      <Item index="11" value="1502" />
+      <Item index="12" value="1702" />
+      <Item index="13" value="0" />
+      <Item index="14" value="1402" />
+      <Item index="15" value="1602" />
+      <Item index="16" value="1702" />
+      <Item index="17" value="1502" />
+      <Item index="18" value="2006" />
+      <Item index="19" value="2007" />
+      <Item index="1a" value="0" />
+      <Item index="1b" value="0" />
+      <Item index="1c" value="2008" />
+      <Item index="1d" value="2009" />
+      <Item index="1e" value="0" />
+      <Item index="1f" value="0" />
+      <Item index="20" value="0" />
+    </Maping>
+  </Dxinput>
+</config>

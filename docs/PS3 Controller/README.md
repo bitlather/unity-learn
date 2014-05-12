@@ -24,6 +24,10 @@ See `MotionInJoy Settings.png` for how to set it up and `MotionInJoy game contro
 
 You will have to update Unity's input manager with more inputs to make this work. Check out the download here: http://wiki.etc.cmu.edu/unity3d/index.php/Joystick/Controller  --- note that 7th and 8th axis are the gyroscopes in the controller, and they overwrite the analog joysticks. Disable the 7th and 8th axis to see the others work. Also, as a test, create your own unity project for PS3 controllers that lists EVERY button and axis pressed - not just one of them.
 
+You will likely have to hit options next to PS3 and set each button individually to match `PS3_controller Button map.jpg`.
+
+NOTE: When PS3 controller selected, you can import `PS3_controller Almost Correct.mij_directx`, which is /almost/ correct. The DPAD does not match what is commonly accepted.
+
 **/IMPORTANT**
 
 USING CONTROLLER: http://angryant.com/2013/08/04/Unity-Hacks-Dual-sticks/

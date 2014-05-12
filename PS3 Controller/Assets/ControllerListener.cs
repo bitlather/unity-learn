@@ -43,7 +43,7 @@ public class ControllerListener : MonoBehaviour {
 			"joystick 1 7th axis",
 			"joystick 1 8th axis"};
 
-		x = 10 + (width * 4);
+		x = 10 + (width * 4) + 30;
 		y = 10;
 		width=220;
 
