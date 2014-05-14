@@ -5,6 +5,10 @@ Newbie video tutorials
 ----------------------
 - 1:28 https://www.youtube.com/watch?v=JFdVRdD9VSM
 
+Advanced video tutorials
+------------------------
+- Long - low poly models https://www.youtube.com/watch?v=rtO9maU709k
+
 Create, edit, delete
 --------------------
 - `DEL` delete currently selected object
